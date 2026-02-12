@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw — Setup Guide</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e4e4ed;
+      --text-muted: #8888a0;
+      --accent: #f97316;
+      --accent-dim: #f97316aa;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 60px;
+      background: linear-gradient(180deg, #1a1020 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #000;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Progress Bar ── */
+    .progress-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      backdrop-filter: blur(12px);
+    }
+    .progress-track {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* ── Steps ── */
+    .step {
+      margin: 48px 0;
+      padding: 32px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .step.completed { border-color: var(--green); }
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .step.completed .step-number {
+      background: var(--green);
+      color: #000;
+    }
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .step-time {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .step-body { padding-left: 52px; }
+    .step-body p { color: var(--text-muted); margin-bottom: 16px; }
+    .step-body p strong { color: var(--text); }
+
+    /* ── Code Blocks ── */
+    .code-block {
+      position: relative;
+      background: #0d0d14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .code-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: #15151f;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #c4c4d4;
+    }
+    pre .comment { color: #5a5a7a; }
+    pre .cmd { color: var(--accent); }
+    pre .str { color: var(--green); }
+    pre .flag { color: var(--blue); }
+
+    /* ── File Blocks ── */
+    .file-block {
+      background: #0d0d14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .file-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #15151f;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+    .file-icon { font-size: 14px; }
+    .file-content {
+      padding: 16px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      color: #b4b4c4;
+    }
+
+    /* ── Tip/Warning Callouts ── */
+    .callout {
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 13.5px;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.tip { background: #0a1a0a; border: 1px solid #1a3a1a; }
+    .callout.tip .callout-icon { color: var(--green); }
+    .callout.warn { background: #1a1a0a; border: 1px solid #3a3a1a; }
+    .callout.warn .callout-icon { color: var(--yellow); }
+    .callout.info { background: #0a0a1a; border: 1px solid #1a1a3a; }
+    .callout.info .callout-icon { color: var(--blue); }
+
+    /* ── Checkbox ── */
+    .check-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 8px 0;
+      transition: all 0.15s;
+      font-size: 14px;
+    }
+    .check-label:hover { border-color: var(--accent-dim); }
+    .check-label input { display: none; }
+    .checkmark {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .check-label input:checked ~ .checkmark {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .checkmark::after {
+      content: '✓';
+      color: #000;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .check-label input:checked ~ .checkmark::after { opacity: 1; }
+
+    /* ── Sections ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 48px 0 8px;
+      padding: 0 4px;
+    }
+    .section-label span {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+    .section-label hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Skills Grid ── */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .skill-card {
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.15s;
+    }
+    .skill-card:hover { border-color: var(--accent-dim); }
+    .skill-name {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .skill-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .skill-tag {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+    .skill-tag.essential { background: var(--green); color: #000; }
+    .skill-tag.recommended { background: var(--blue); color: #fff; }
+    .skill-tag.optional { background: var(--border); color: var(--text-muted); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 80px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── Config Table ── */
+    .config-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .config-table th {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .config-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .config-table code {
+      background: #0d0d14;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">⚡ Personalized Setup Guide</div>
+  <h1>Get <span>OpenClaw</span> Running</h1>
+  <p>From zero to a fully configured AI assistant in under 30 minutes. Follow each step, check it off, and you're live.</p>
+</section>
+
+<!-- ── Progress ── -->
+<div class="progress-bar">
+  <span class="progress-text" id="progress-label">0 / 10</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="section-label"><span>Prerequisites</span><hr></div>
+
+<!-- Step 1 -->
+<div class="step" data-step="1">
+  <div class="step-header" onclick="toggleStep(1)">
+    <div class="step-number">1</div>
+    <div>
+      <div class="step-title">Install Node.js & Git</div>
+      <div class="step-time">~5 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>OpenClaw requires <strong>Node.js 20+</strong> and <strong>Git</strong>. Check if you have them:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">node</span> <span class="flag">--version</span>   <span class="comment"># Should show v20+ or v22+</span>
+<span class="cmd">git</span> <span class="flag">--version</span>    <span class="comment"># Any recent version works</span></pre>
+    </div>
+
+    <p>If not installed:</p>
+
+    <div class="code-block">
+      <div class="code-label">macOS <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Install Node via nvm (recommended)</span>
+<span class="cmd">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+<span class="cmd">nvm</span> install 22
+
+<span class="comment"># Git comes with Xcode Command Line Tools</span>
+<span class="cmd">xcode-select</span> <span class="flag">--install</span></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">Windows <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Using winget</span>
+<span class="cmd">winget</span> install OpenJS.NodeJS.LTS
+<span class="cmd">winget</span> install Git.Git</pre>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Node.js 20+ and Git installed</label>
+  </div>
+</div>
+
+<!-- Step 2 -->
+<div class="step" data-step="2">
+  <div class="step-header" onclick="toggleStep(2)">
+    <div class="step-number">2</div>
+    <div>
+      <div class="step-title">Get an AI Provider API Key</div>
+      <div class="step-time">~3 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>You need at least one API key. <strong>Anthropic (Claude)</strong> is recommended for the best experience:</p>
+
+    <table class="config-table">
+      <tr><th>Provider</th><th>Where to Get Key</th><th>Best For</th></tr>
+      <tr><td>Anthropic</td><td><code>console.anthropic.com</code></td><td>Main chat, reasoning</td></tr>
+      <tr><td>OpenAI</td><td><code>platform.openai.com</code></td><td>Codex (free w/ ChatGPT Pro)</td></tr>
+      <tr><td>Google</td><td><code>aistudio.google.com</code></td><td>Gemini Flash (cheap/free)</td></tr>
+      <tr><td>OpenRouter</td><td><code>openrouter.ai</code></td><td>Access all models via one key</td></tr>
+    </table>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Pro tip:</strong> Start with Anthropic (Claude Sonnet) for main chat. Add OpenAI later for free Codex coding. OpenRouter gives you everything through one API key if you want simplicity.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Got at least one API key</label>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="section-label"><span>Installation</span><hr></div>
+
+<!-- Step 3 -->
+<div class="step" data-step="3">
+  <div class="step-header" onclick="toggleStep(3)">
+    <div class="step-number">3</div>
+    <div>
+      <div class="step-title">Install OpenClaw</div>
+      <div class="step-time">~2 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>One command gets you the full system:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">npm</span> install <span class="flag">-g</span> openclaw</pre>
+    </div>
+
+    <p>Verify it installed:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">openclaw</span> <span class="flag">--version</span></pre>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> OpenClaw installed globally</label>
+  </div>
+</div>
+
+<!-- Step 4 -->
+<div class="step" data-step="4">
+  <div class="step-header" onclick="toggleStep(4)">
+    <div class="step-number">4</div>
+    <div>
+      <div class="step-title">Run Initial Setup</div>
+      <div class="step-time">~3 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>The setup wizard walks you through connecting your first provider:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">openclaw</span> setup</pre>
+    </div>
+
+    <p>This will:</p>
+    <ul style="color: var(--text-muted); padding-left: 20px; margin-bottom: 16px;">
+      <li>Create your workspace at <code>~/.openclaw/workspace/</code></li>
+      <li>Generate a default config</li>
+      <li>Prompt for your API key(s)</li>
+      <li>Set up the gateway daemon</li>
+    </ul>
+
+    <div class="callout info">
+      <span class="callout-icon">📁</span>
+      <div><strong>Your workspace:</strong> Everything lives in <code>~/.openclaw/workspace/</code>. This is where your memory files, skills, and config live. It's just a folder — back it up, version it, whatever you want.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Setup wizard completed</label>
+  </div>
+</div>
+
+<!-- Step 5 -->
+<div class="step" data-step="5">
+  <div class="step-header" onclick="toggleStep(5)">
+    <div class="step-number">5</div>
+    <div>
+      <div class="step-title">Start the Gateway</div>
+      <div class="step-time">~1 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>The gateway is the daemon that keeps your agent alive 24/7:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">openclaw</span> gateway start
+
+<span class="comment"># Check it's running</span>
+<span class="cmd">openclaw</span> gateway status</pre>
+    </div>
+
+    <p>You should see a status showing <strong>connected</strong> with your model info.</p>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Gateway running</label>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="section-label"><span>Make It Yours</span><hr></div>
+
+<!-- Step 6 -->
+<div class="step" data-step="6">
+  <div class="step-header" onclick="toggleStep(6)">
+    <div class="step-number">6</div>
+    <div>
+      <div class="step-title">Create Your SOUL.md</div>
+      <div class="step-time">~5 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>This is the most important file. <strong>SOUL.md defines your agent's personality.</strong> Without it, you get a generic assistant. With it, you get <em>your</em> assistant.</p>
+
+    <div class="file-block">
+      <div class="file-header"><span class="file-icon">📄</span> ~/.openclaw/workspace/SOUL.md</div>
+      <div class="file-content"># SOUL.md - Who You Are
+
+## Core Truths
+
+**Be genuinely helpful, not performatively helpful.**
+Skip the "Great question!" filler. Just help. Actions over words.
+
+**Have opinions.** Stop hedging with "it depends" — commit to a take.
+You're allowed to disagree, prefer things, find stuff amusing.
+
+**Brevity is mandatory.** If the answer fits in one sentence,
+one sentence is what you get.
+
+**Be resourceful before asking.** Try to figure it out first.
+Read the file. Check the context. Search for it. Then ask.
+
+**Call things out.** If something's a bad idea, say so.
+Charm over cruelty, but don't sugarcoat.
+
+**Humor is allowed.** Not forced — just natural wit.
+
+## Boundaries
+
+- Private things stay private
+- Ask before acting externally (emails, posts)
+- Never send half-baked replies
+- You're not the user's voice
+
+## Continuity
+
+Each session, you wake up fresh. These files ARE your memory.
+Read them. Update them. They're how you persist.</div>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">✨</span>
+      <div><strong>Make it yours:</strong> This is a starting point. Edit the tone, add your preferences, tell it what you care about. The more specific you are, the better it performs. Your agent will evolve this file over time.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> SOUL.md created and personalized</label>
+  </div>
+</div>
+
+<!-- Step 7 -->
+<div class="step" data-step="7">
+  <div class="step-header" onclick="toggleStep(7)">
+    <div class="step-number">7</div>
+    <div>
+      <div class="step-title">Set Up Memory System</div>
+      <div class="step-time">~5 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>Memory is how your agent remembers across sessions. Without it, every conversation starts from zero.</p>
+
+    <div class="file-block">
+      <div class="file-header"><span class="file-icon">📄</span> ~/.openclaw/workspace/MEMORY.md</div>
+      <div class="file-content"># MEMORY.md — Long-Term Memory (keep under 50 lines)
+# Daily logs: memory/YYYY-MM-DD.md
+# Archive: memory/archive/
+
+## About Me
+- Name: [Your name]
+- Location: [City, timezone]
+- Work: [What you do]
+
+## Active Projects
+1. [Project 1] — brief description
+2. [Project 2] — brief description
+
+## Preferences
+- [How you like to work]
+- [Tools you use]
+- [Communication style]
+
+## Key Rules
+- [Important things the agent should always remember]</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">Terminal — Create memory directory <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">mkdir</span> <span class="flag">-p</span> ~/.openclaw/workspace/memory/archive</pre>
+    </div>
+
+    <div class="file-block">
+      <div class="file-header"><span class="file-icon">📄</span> ~/.openclaw/workspace/USER.md</div>
+      <div class="file-content"># USER.md - About You
+
+- **Name:** [Your name]
+- **Pronouns:** [he/him, she/her, they/them]
+- **Timezone:** [e.g., America/New_York]
+- **What to call you:** [First name, nickname, etc.]
+
+## Work
+- What you do
+- Your tech stack
+- Your goals
+
+## Preferences
+- Communication style (direct, detailed, casual)
+- Proactive vs reactive assistant
+- Any topics to avoid</div>
+    </div>
+
+    <div class="file-block">
+      <div class="file-header"><span class="file-icon">📄</span> ~/.openclaw/workspace/IDENTITY.md</div>
+      <div class="file-content"># IDENTITY.md - Agent Identity
+
+- **Name:** [Pick a name for your agent]
+- **Vibe:** [e.g., Sharp, efficient, proactive]
+- **Emoji:** [Pick one — ⚡🔥🧠🤖🦾]
+
+---
+*Your AI assistant, running 24/7.*</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Size limits matter:</strong> Keep MEMORY.md under 50 lines and AGENTS.md under 80 lines. These get injected into every conversation. Too large = context overflow = broken sessions. Archive details to <code>memory/archive/</code>.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Memory files created</label>
+  </div>
+</div>
+
+<!-- Step 8 -->
+<div class="step" data-step="8">
+  <div class="step-header" onclick="toggleStep(8)">
+    <div class="step-number">8</div>
+    <div>
+      <div class="step-title">Configure AGENTS.md & Compaction</div>
+      <div class="step-time">~5 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p><strong>AGENTS.md</strong> is your agent's operational playbook — rules, workflows, and behaviors. <strong>Memory compaction</strong> prevents context overflow.</p>
+
+    <div class="file-block">
+      <div class="file-header"><span class="file-icon">📄</span> ~/.openclaw/workspace/AGENTS.md</div>
+      <div class="file-content"># AGENTS.md — Workspace Rules (keep under 80 lines)
+
+## Boot Sequence
+1. Read SOUL.md, USER.md, IDENTITY.md
+2. Read memory/YYYY-MM-DD.md (today + yesterday)
+3. In main session: also read MEMORY.md
+
+## Size Limits (CRITICAL)
+- MEMORY.md: max 50 lines. Archive details to memory/archive/
+- AGENTS.md: max 80 lines. Keep rules concise.
+- Daily notes: memory/YYYY-MM-DD.md (unlimited, not injected)
+
+## Memory
+- Daily logs: memory/YYYY-MM-DD.md
+- Long-term: MEMORY.md (curated, slim)
+- Archive: memory/archive/ (full details)
+- Write things down. Mental notes don't survive restarts.
+
+## Context Management
+- Heavy tasks → spawn sub-agents
+- Sub-agents write findings to files, return summaries
+- Compaction is automatic — write key decisions to memory first
+
+## Safety
+- Don't exfiltrate private data
+- Ask before external actions (emails, tweets)
+- Double-confirm destructive actions</div>
+    </div>
+
+    <p>Memory compaction happens automatically when context fills up. Your agent will summarize the conversation and continue. To make this seamless:</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">🧠</span>
+      <div><strong>Compaction best practice:</strong> Tell your agent to write important decisions to <code>memory/</code> files <em>before</em> context fills up. When compaction triggers, only the summary survives — but memory files persist forever.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> AGENTS.md configured</label>
+  </div>
+</div>
+
+<!-- Step 9 -->
+<div class="step" data-step="9">
+  <div class="step-header" onclick="toggleStep(9)">
+    <div class="step-number">9</div>
+    <div>
+      <div class="step-title">Install Essential Skills</div>
+      <div class="step-time">~3 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>Skills are on-demand procedures your agent loads when needed. These are the ones that make the biggest difference:</p>
+
+    <div class="skill-grid">
+      <div class="skill-card">
+        <div class="skill-name">🌤 Weather</div>
+        <div class="skill-desc">Current weather and forecasts. No API key needed.</div>
+        <span class="skill-tag essential">Essential</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">🧩 Coding Agent</div>
+        <div class="skill-desc">Run Codex CLI for code tasks. Free with ChatGPT Pro.</div>
+        <span class="skill-tag essential">Essential</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">🔒 Healthcheck</div>
+        <div class="skill-desc">Security auditing and hardening for your machine.</div>
+        <span class="skill-tag recommended">Recommended</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">🎨 Image Gen</div>
+        <div class="skill-desc">Generate images via OpenAI API with gallery output.</div>
+        <span class="skill-tag recommended">Recommended</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">🎙 Whisper</div>
+        <div class="skill-desc">Transcribe audio files via OpenAI Whisper API.</div>
+        <span class="skill-tag optional">Optional</span>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">🌐 Browser Use</div>
+        <div class="skill-desc">Multi-step browser automation for web interactions.</div>
+        <span class="skill-tag optional">Optional</span>
+      </div>
+    </div>
+
+    <p>Skills come bundled with OpenClaw. You can also install community skills from <a href="https://clawdhub.com" style="color: var(--accent)">ClawdHub</a>:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Browse available skills</span>
+<span class="cmd">clawdhub</span> search
+
+<span class="comment"># Install a skill</span>
+<span class="cmd">clawdhub</span> install <span class="str">skill-name</span></pre>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Skills reviewed and installed</label>
+  </div>
+</div>
+
+<!-- Step 10 -->
+<div class="step" data-step="10">
+  <div class="step-header" onclick="toggleStep(10)">
+    <div class="step-number">10</div>
+    <div>
+      <div class="step-title">Connect a Channel & Go Live</div>
+      <div class="step-time">~5 min</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>OpenClaw supports multiple messaging surfaces. Pick your primary:</p>
+
+    <table class="config-table">
+      <tr><th>Channel</th><th>Setup</th><th>Best For</th></tr>
+      <tr><td>💬 Telegram</td><td>Create bot via @BotFather</td><td>Mobile + desktop, rich messages</td></tr>
+      <tr><td>📱 Signal</td><td>Link device via signal-cli</td><td>Privacy-focused, encrypted</td></tr>
+      <tr><td>🟢 WhatsApp</td><td>WhatsApp Business API</td><td>Business communication</td></tr>
+      <tr><td>💜 Discord</td><td>Create bot in Developer Portal</td><td>Team collaboration</td></tr>
+      <tr><td>🌐 Webchat</td><td>Built into ClawSuite</td><td>Quick access, no setup</td></tr>
+    </table>
+
+    <p>Webchat works out of the box with ClawSuite (our dashboard). For Telegram:</p>
+
+    <div class="code-block">
+      <div class="code-label">Telegram Setup <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># 1. Message @BotFather on Telegram</span>
+<span class="comment"># 2. Send /newbot, follow prompts</span>
+<span class="comment"># 3. Copy the bot token</span>
+<span class="comment"># 4. Add to your OpenClaw config:</span>
+
+<span class="cmd">openclaw</span> config set telegram.token <span class="str">"YOUR_BOT_TOKEN"</span>
+<span class="cmd">openclaw</span> gateway restart</pre>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">🚀</span>
+      <div><strong>ClawSuite:</strong> For the full visual experience — dashboard, file explorer, terminal, task board — install <a href="https://github.com/outsourc-e/clawsuite" style="color: var(--accent)">ClawSuite</a>. It connects to your gateway and gives you a command center for your agent.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Channel connected and agent responding</label>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="section-label"><span>Pro Tips</span><hr></div>
+
+<div class="step" style="border-color: var(--purple);">
+  <div class="step-header">
+    <div class="step-number" style="background: var(--purple); color: #fff;">★</div>
+    <div>
+      <div class="step-title">Power User Configuration</div>
+      <div class="step-time">Things that make a huge difference</div>
+    </div>
+  </div>
+  <div class="step-body">
+
+    <p><strong>1. Heartbeats</strong> — Your agent can do background work on a schedule:</p>
+    <div class="file-block">
+      <div class="file-header"><span class="file-icon">📄</span> ~/.openclaw/workspace/HEARTBEAT.md</div>
+      <div class="file-content"># HEARTBEAT.md — Background Tasks
+
+## Active Checks
+- Check weather at 8am and 6pm
+- Monitor email for important messages
+- Review calendar for upcoming meetings
+
+## Rules
+- Quiet hours: 23:00-08:00 (no notifications)
+- Only alert if something needs attention
+- Do background work: memory cleanup, organize notes</div>
+    </div>
+
+    <p><strong>2. Model Routing</strong> — Use cheap models for routine tasks, premium for important ones:</p>
+    <div class="callout info">
+      <span class="callout-icon">💰</span>
+      <div>
+        <strong>Cost-optimized setup:</strong><br>
+        • <strong>Heartbeats:</strong> Gemini Flash (nearly free)<br>
+        • <strong>Coding:</strong> Codex CLI (free with ChatGPT Pro)<br>
+        • <strong>Main chat:</strong> Claude Sonnet (good balance)<br>
+        • <strong>Heavy reasoning:</strong> Claude Opus (when stuck)<br>
+        This can reduce costs by 70%+ vs using a premium model for everything.
+      </div>
+    </div>
+
+    <p><strong>3. Sub-agents</strong> — Delegate heavy work to background agents:</p>
+    <div class="callout tip">
+      <span class="callout-icon">🤖</span>
+      <div>Your agent can spawn sub-agents for parallel work. Tell it to "spawn a sub-agent to research X" — it runs in the background and reports back. Great for coding tasks, research, and analysis without blocking your main conversation.</div>
+    </div>
+
+    <p><strong>4. Cron Jobs</strong> — Schedule recurring tasks:</p>
+    <div class="callout tip">
+      <span class="callout-icon">⏰</span>
+      <div>Ask your agent to "remind me every Monday at 9am to review weekly goals" — it creates a cron job that fires automatically. Also great for daily summaries, regular check-ins, and automated reports.</div>
+    </div>
+
+    <p><strong>5. Memory Architecture</strong> — The key to a smart agent:</p>
+    <div class="callout info">
+      <span class="callout-icon">🧠</span>
+      <div>
+        <code>MEMORY.md</code> — Curated essentials (50 lines max)<br>
+        <code>memory/YYYY-MM-DD.md</code> — Daily logs (unlimited)<br>
+        <code>memory/archive/</code> — Full details for deep recall<br>
+        <code>AGENTS.md</code> — Operating rules (80 lines max)<br><br>
+        Think of MEMORY.md as your agent's "working memory" and the daily files as its "journal." Keep working memory tight; let the journal be verbose.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>Built with ⚡ by the OpenClaw community</p>
+  <p style="margin-top: 8px;">
+    <a href="https://docs.openclaw.ai">Docs</a> · 
+    <a href="https://github.com/openclaw/openclaw">GitHub</a> · 
+    <a href="https://discord.com/invite/clawd">Discord</a> · 
+    <a href="https://clawdhub.com">Skills Hub</a>
+  </p>
+</footer>
+
+<script>
+  const TOTAL_STEPS = 10;
+
+  function updateProgress() {
+    const checks = document.querySelectorAll('.check-label input[type="checkbox"]');
+    let done = 0;
+    checks.forEach((c, i) => {
+      if (c.checked) {
+        done++;
+        c.closest('.step')?.classList.add('completed');
+      } else {
+        c.closest('.step')?.classList.remove('completed');
+      }
+    });
+    const pct = Math.round((done / TOTAL_STEPS) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = done + ' / ' + TOTAL_STEPS;
+
+    // Save state
+    const state = Array.from(checks).map(c => c.checked);
+    localStorage.setItem('openclaw-setup-progress', JSON.stringify(state));
+  }
+
+  // Restore state
+  try {
+    const saved = JSON.parse(localStorage.getItem('openclaw-setup-progress') || '[]');
+    const checks = document.querySelectorAll('.check-label input[type="checkbox"]');
+    saved.forEach((v, i) => { if (checks[i]) checks[i].checked = v; });
+    updateProgress();
+  } catch {}
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function toggleStep(n) {
+    // Optional: could add collapsing, but keeping all open for onboarding flow
+  }
+</script>
+
+</body>
+</html>
