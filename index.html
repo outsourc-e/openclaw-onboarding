@@ -350,6 +350,40 @@
     .skill-tag.recommended { background: var(--blue); color: #fff; }
     .skill-tag.optional { background: var(--border); color: var(--text-muted); }
 
+    /* ── OS Toggle ── */
+    .os-toggle {
+      display: flex;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0 auto 0;
+      width: fit-content;
+    }
+    .os-toggle button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .os-toggle button:hover { color: var(--text); background: var(--card); }
+    .os-toggle button.active {
+      background: var(--accent);
+      color: #000;
+    }
+    .os-toggle button + button { border-left: 1px solid var(--border); }
+
+    [data-os="mac"] .win-only,
+    [data-os="win"] .mac-only { display: none !important; }
+
     /* ── Footer ── */
     footer {
       text-align: center;
@@ -396,6 +430,12 @@
   <div class="hero-badge">⚡ Personalized Setup Guide</div>
   <h1>Get <span>OpenClaw</span> Running</h1>
   <p>From zero to a fully configured AI assistant in under 30 minutes. Follow each step, check it off, and you're live.</p>
+  <div style="margin-top: 24px;">
+    <div class="os-toggle" id="os-toggle">
+      <button onclick="setOS('mac')" id="os-mac" class="active"> macOS</button>
+      <button onclick="setOS('win')" id="os-win"> Windows</button>
+    </div>
+  </div>
 </section>
 
 <!-- ── Progress ── -->
@@ -431,8 +471,8 @@
 
     <p>If not installed:</p>
 
-    <div class="code-block">
-      <div class="code-label">macOS <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <div class="code-block mac-only">
+      <div class="code-label"> macOS <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
       <pre><span class="comment"># Install Node via nvm (recommended)</span>
 <span class="cmd">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 <span class="cmd">nvm</span> install 22
@@ -441,11 +481,15 @@
 <span class="cmd">xcode-select</span> <span class="flag">--install</span></pre>
     </div>
 
-    <div class="code-block">
-      <div class="code-label">Windows <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-      <pre><span class="comment"># Using winget</span>
+    <div class="code-block win-only">
+      <div class="code-label"> Windows <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="comment"># Using winget (built into Windows 11)</span>
 <span class="cmd">winget</span> install OpenJS.NodeJS.LTS
-<span class="cmd">winget</span> install Git.Git</pre>
+<span class="cmd">winget</span> install Git.Git
+
+<span class="comment"># Or download installers:</span>
+<span class="comment"># Node: https://nodejs.org</span>
+<span class="comment"># Git: https://git-scm.com</span></pre>
     </div>
 
     <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Node.js 20+ and Git installed</label>
@@ -537,9 +581,13 @@
       <li>Set up the gateway daemon</li>
     </ul>
 
-    <div class="callout info">
+    <div class="callout info mac-only">
       <span class="callout-icon">📁</span>
       <div><strong>Your workspace:</strong> Everything lives in <code>~/.openclaw/workspace/</code>. This is where your memory files, skills, and config live. It's just a folder — back it up, version it, whatever you want.</div>
+    </div>
+    <div class="callout info win-only">
+      <span class="callout-icon">📁</span>
+      <div><strong>Your workspace:</strong> Everything lives in <code>C:\Users\YOU\.openclaw\workspace\</code>. This is where your memory files, skills, and config live. It's just a folder — back it up, version it, whatever you want.</div>
     </div>
 
     <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Setup wizard completed</label>
@@ -668,9 +716,13 @@ Read them. Update them. They're how you persist.</div>
 - [Important things the agent should always remember]</div>
     </div>
 
-    <div class="code-block">
+    <div class="code-block mac-only">
       <div class="code-label">Terminal — Create memory directory <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
       <pre><span class="cmd">mkdir</span> <span class="flag">-p</span> ~/.openclaw/workspace/memory/archive</pre>
+    </div>
+    <div class="code-block win-only">
+      <div class="code-label">PowerShell — Create memory directory <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">New-Item</span> <span class="flag">-ItemType</span> Directory <span class="flag">-Force</span> <span class="str">"$env:USERPROFILE\.openclaw\workspace\memory\archive"</span></pre>
     </div>
 
     <div class="file-block">
@@ -995,6 +1047,23 @@ Read them. Update them. They're how you persist.</div>
   function toggleStep(n) {
     // Optional: could add collapsing, but keeping all open for onboarding flow
   }
+
+  // ── OS Toggle ──
+  function setOS(os) {
+    document.documentElement.setAttribute('data-os', os);
+    document.getElementById('os-mac').classList.toggle('active', os === 'mac');
+    document.getElementById('os-win').classList.toggle('active', os === 'win');
+    localStorage.setItem('openclaw-setup-os', os);
+  }
+
+  // Auto-detect or restore
+  (function initOS() {
+    const saved = localStorage.getItem('openclaw-setup-os');
+    if (saved) { setOS(saved); return; }
+    const isMac = navigator.platform?.toLowerCase().includes('mac') ||
+                  navigator.userAgent?.toLowerCase().includes('mac');
+    setOS(isMac ? 'mac' : 'win');
+  })();
 </script>
 
 </body>
