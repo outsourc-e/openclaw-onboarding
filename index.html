@@ -501,27 +501,57 @@
   <div class="step-header" onclick="toggleStep(2)">
     <div class="step-number">2</div>
     <div>
-      <div class="step-title">Get an AI Provider API Key</div>
-      <div class="step-time">~3 min</div>
+      <div class="step-title">Set Up AI Provider (Claude)</div>
+      <div class="step-time">~5 min</div>
     </div>
   </div>
   <div class="step-body">
-    <p>You need at least one API key. <strong>Anthropic (Claude)</strong> is recommended for the best experience:</p>
+    <p>OpenClaw needs an AI provider to power your agent. <strong>Anthropic (Claude)</strong> is recommended — here's how to set it up:</p>
 
-    <table class="config-table">
-      <tr><th>Provider</th><th>Where to Get Key</th><th>Best For</th></tr>
-      <tr><td>Anthropic</td><td><code>console.anthropic.com</code></td><td>Main chat, reasoning</td></tr>
-      <tr><td>OpenAI</td><td><code>platform.openai.com</code></td><td>Codex (free w/ ChatGPT Pro)</td></tr>
-      <tr><td>Google</td><td><code>aistudio.google.com</code></td><td>Gemini Flash (cheap/free)</td></tr>
-      <tr><td>OpenRouter</td><td><code>openrouter.ai</code></td><td>Access all models via one key</td></tr>
-    </table>
+    <h4 style="color: var(--accent); margin: 20px 0 12px; font-size: 14px;">Option A: Claude OAuth (Easiest — recommended)</h4>
+    <p>This uses your Claude account directly. No API key needed.</p>
 
-    <div class="callout tip">
-      <span class="callout-icon">💡</span>
-      <div><strong>Pro tip:</strong> Start with Anthropic (Claude Sonnet) for main chat. Add OpenAI later for free Codex coding. OpenRouter gives you everything through one API key if you want simplicity.</div>
+    <div class="code-block">
+      <div class="code-label">Step 1: Install Claude Code CLI <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">npm</span> install <span class="flag">-g</span> @anthropic-ai/claude-code</pre>
     </div>
 
-    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Got at least one API key</label>
+    <div class="code-block">
+      <div class="code-label">Step 2: Generate setup token <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">claude</span> setup-token
+<span class="comment"># This opens a browser window to authenticate</span>
+<span class="comment"># Copy the token it generates — you'll paste it during OpenClaw config</span></pre>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">✅</span>
+      <div><strong>That's it!</strong> When you run <code>openclaw config</code> later, select <strong>Anthropic</strong> as your provider, choose <strong>Anthropic token</strong> as auth method, and paste the token from above.</div>
+    </div>
+
+    <h4 style="color: var(--accent); margin: 20px 0 12px; font-size: 14px;">Option B: API Key (Pay-as-you-go)</h4>
+    <p>If you prefer direct API access with usage-based billing:</p>
+
+    <ol style="color: var(--text-muted); padding-left: 20px; margin-bottom: 16px; line-height: 2;">
+      <li>Go to <a href="https://console.anthropic.com" style="color: var(--accent);">console.anthropic.com</a> → sign up</li>
+      <li>Navigate to <strong>API Keys</strong> → <strong>Create Key</strong></li>
+      <li>Copy the key (starts with <code>sk-ant-...</code>)</li>
+      <li>You'll paste this during <code>openclaw config</code></li>
+    </ol>
+
+    <h4 style="color: var(--text-muted); margin: 20px 0 12px; font-size: 14px;">Other Providers (Optional — add later)</h4>
+    <table class="config-table">
+      <tr><th>Provider</th><th>Where to Get Key</th><th>Best For</th></tr>
+      <tr><td>OpenAI</td><td><code>platform.openai.com</code></td><td>Codex coding (free with ChatGPT Pro)</td></tr>
+      <tr><td>Google</td><td><code>aistudio.google.com</code></td><td>Gemini Flash (nearly free, great for background tasks)</td></tr>
+      <tr><td>OpenRouter</td><td><code>openrouter.ai</code></td><td>Access all models via one API key</td></tr>
+    </table>
+
+    <div class="callout info">
+      <span class="callout-icon">💰</span>
+      <div><strong>Cost tip:</strong> Start with just Claude. Later, add Gemini Flash for cheap background tasks and OpenAI for free Codex coding. You can route different tasks to different models to save 70%+ on costs.</div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Provider set up and token/key ready</label>
   </div>
 </div>
 
@@ -545,11 +575,26 @@
       <pre><span class="cmd">npm</span> install <span class="flag">-g</span> openclaw</pre>
     </div>
 
+    <div class="callout warn win-only">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Windows: If you see cmake/llama errors</strong> — that's normal! It's an optional dependency. Run this instead:
+      <br><br><code>npm install -g openclaw --ignore-scripts</code>
+      <br><br>Everything works fine without it.</div>
+    </div>
+
     <p>Verify it installed:</p>
 
     <div class="code-block">
       <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
       <pre><span class="cmd">openclaw</span> <span class="flag">--version</span></pre>
+    </div>
+
+    <div class="callout warn win-only">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Windows: "npm not recognized"?</strong>
+      <br>Close and reopen PowerShell after installing Node. If still broken:
+      <br><br><code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code>
+      <br><br>Then try <code>npm --version</code> again.</div>
     </div>
 
     <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> OpenClaw installed globally</label>
@@ -594,6 +639,57 @@
   </div>
 </div>
 
+<!-- Step 4b - Configure Gateway -->
+<div class="step" data-step="4">
+  <div class="step-header">
+    <div class="step-number" style="background: var(--accent); color: #000;">⚙</div>
+    <div>
+      <div class="step-title">Configure Gateway & Provider</div>
+      <div class="step-time">~3 min — critical step</div>
+    </div>
+  </div>
+  <div class="step-body">
+    <p>After setup, run the config wizard to connect your provider and set gateway auth:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cmd">openclaw</span> config</pre>
+    </div>
+
+    <p><strong>When prompted, configure these sections:</strong></p>
+
+    <div class="callout info">
+      <span class="callout-icon">1️⃣</span>
+      <div><strong>Model → Anthropic</strong><br>Select Anthropic as your provider. Choose <strong>Anthropic token</strong> auth and paste the token from <code>claude setup-token</code> (Step 2). If using an API key, choose <strong>API Key</strong> and paste your <code>sk-ant-...</code> key.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">2️⃣</span>
+      <div><strong>Gateway → Auth → Password</strong><br>Select <strong>Password</strong> (not Token). Set something simple you'll remember. This is what you enter in the web UI to connect to your agent.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">3️⃣</span>
+      <div><strong>Gateway → Bind → Loopback</strong><br>Keep it on <strong>Loopback (Local only)</strong> for security. This means only your computer can access the agent.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">4️⃣</span>
+      <div><strong>Tailscale → Off</strong><br>Skip this for now. You can add remote access later.</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Troubleshooting:</strong> If the gateway says "token missing" or the web UI shows "disconnected" — you likely chose Token auth instead of Password. Fix it:
+      <br><br>
+      <code>openclaw config</code> → Gateway → Auth → switch to <strong>Password</strong>
+      <br><br>
+      Or delete config and start over: <span class="mac-only"><code>rm ~/.openclaw/openclaw.json && openclaw setup</code></span><span class="win-only"><code>del $env:USERPROFILE\.openclaw\openclaw.json</code> then <code>openclaw setup</code></span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Step 5 -->
 <div class="step" data-step="5">
   <div class="step-header" onclick="toggleStep(5)">
@@ -614,9 +710,24 @@
 <span class="cmd">openclaw</span> gateway status</pre>
     </div>
 
-    <p>You should see a status showing <strong>connected</strong> with your model info.</p>
+    <p>You should see a status showing <strong>connected</strong> with your model info. Open <a href="http://127.0.0.1:18789" style="color: var(--accent)">http://127.0.0.1:18789</a> in your browser — enter your password and start chatting!</p>
 
-    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Gateway running</label>
+    <div class="callout warn win-only">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Windows: "Port already in use" or "gateway already running"?</strong>
+      <br><br>Kill everything and restart:
+      <br><code>taskkill /F /IM node.exe</code>
+      <br><code>schtasks /End /TN "OpenClaw Gateway"</code>
+      <br><code>openclaw gateway run</code>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">🌐</span>
+      <div><strong>Web UI:</strong> Once the gateway is running, open <strong>http://127.0.0.1:18789</strong> in your browser. Enter the password you set during config. You should see the OpenClaw dashboard with a chat interface. Try sending: <em>"Hello, what can you do?"</em></div>
+    </div>
+
+    <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span> Gateway running and web UI accessible</label>
   </div>
 </div>
 
