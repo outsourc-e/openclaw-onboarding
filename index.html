@@ -681,6 +681,37 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       box-shadow: var(--shadow);
     }
+    .article-preface {
+      margin: 24px auto 0;
+      max-width: 980px;
+      border: 1px solid rgba(83,199,255,0.16);
+      border-radius: 18px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(83,199,255,0.08), rgba(109,92,255,0.06));
+      text-align: left;
+      box-shadow: var(--shadow);
+    }
+    .logo-img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      background: rgba(255,255,255,0.04);
+      padding: 2px;
+    }
+    .screenshot-frame {
+      border-radius: 16px;
+      border: 1px solid #2b2b44;
+      overflow: hidden;
+      background: #0c0f18;
+      box-shadow: var(--shadow);
+    }
+    .screenshot-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
     .judges-panel {
       margin: 28px 0 6px;
       border: 1px solid rgba(255,176,103,0.16);
@@ -922,6 +953,10 @@
   <div class="callout purple" style="max-width: 980px; margin: 24px auto 0; text-align: left;">
     <span class="callout-icon">🏁</span>
     <div><strong>This page is the Beelink × OpenClaw hackathon build.</strong> The thesis is simple: an always-on mini PC is the right home for a real agent. Better uptime, cheaper power, local model headroom, and no laptop-lid failure mode.</div>
+  </div>
+
+  <div class="article-preface">
+    <strong>Feed this to your agent first.</strong> This article is meant to be agent-agnostic. Drop it into OpenClaw, Claude, Codex, Hermes, or whatever agent you use, then tell it to audit your current setup, steal the useful parts, and improve your memory, routing, heartbeat, and hardware posture without copying things blindly.
   </div>
 </section>
 
@@ -1403,34 +1438,12 @@ If there is no real delta, do not send a message.</div>
       <div class="callout tip"><span class="callout-icon">🖥️</span><div><strong>Runs locally on port 3000.</strong> You get dashboard views, file explorer, terminal, task board, chat, and agent management UI against the same gateway.</div></div>
       <div class="visual-panel">
         <div class="visual-header">
-          <div class="visual-title"><span class="brand-mark clawsuite"></span> Clawsuite control UI</div>
+          <div class="visual-title"><img src="assets/clawsuite-icon-512.png" alt="Clawsuite logo" class="logo-img"> Clawsuite control UI</div>
           <code>localhost:3000</code>
         </div>
         <div class="visual-body">
-          <div class="ui-mock">
-            <div class="ui-mock-top">
-              <div class="ui-side">
-                <div class="ui-pill" style="width: 72%;"></div>
-                <div class="ui-line" style="width: 88%;"></div>
-                <div class="ui-line" style="width: 70%;"></div>
-                <div class="ui-line" style="width: 78%;"></div>
-                <div class="ui-box"></div>
-              </div>
-              <div class="ui-main">
-                <div class="ui-kpi-row">
-                  <div class="ui-kpi"><strong>5</strong><span>Agents</span></div>
-                  <div class="ui-kpi"><strong>33,294</strong><span>Tool calls</span></div>
-                  <div class="ui-kpi"><strong>142M</strong><span>Tokens</span></div>
-                </div>
-                <div class="ui-box" style="height: 94px;"></div>
-                <div class="ui-box" style="height: 74px;"></div>
-              </div>
-              <div class="ui-right">
-                <div class="ui-pill" style="width: 64%;"></div>
-                <div class="ui-box" style="height: 52px;"></div>
-                <div class="ui-box" style="height: 112px;"></div>
-              </div>
-            </div>
+          <div class="screenshot-frame">
+            <img src="assets/clawsuite-dashboard-v3.png" alt="Clawsuite dashboard screenshot">
           </div>
           <div class="grid-2">
             <div class="callout info"><span class="callout-icon">📊</span><div><strong>Why it matters:</strong> Clawsuite turns the runtime into something you can actually steer, inspect, and demo to people without juggling terminal tabs.</div></div>
