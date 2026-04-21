@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Steal My OCPlatform Setup</title>
+  <title>Steal My OpenClaw Setup</title>
   <style>
     :root {
       --bg: #0a0a0f;
@@ -528,7 +528,7 @@
 
 <section class="hero">
   <div class="hero-badge">⚡ 62-Day Field Report</div>
-  <h1>Steal My <span>OCPlatform</span> Setup</h1>
+  <h1>Steal My <span>OpenClaw</span> Setup</h1>
   <p>62 days. 1,215 sessions. 13,607 messages. 33,294 tool calls. 142M tokens. 2,977 commits across 3 repos. Here's exactly how my agent runs, and what I'd do differently.</p>
 
   <div class="hero-stats">
@@ -567,7 +567,7 @@
       </div>
     </div>
     <div class="step-body">
-      <p>I keep the base dead simple. OCPlatform only needs a current Node runtime and Git. If those two are right, the rest is mostly config.</p>
+      <p>I keep the base dead simple. OpenClaw only needs a current Node runtime and Git. If those two are right, the rest is mostly config.</p>
       <div class="code-block">
         <div class="code-label">Verify versions <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
         <pre><span class="cmd">node</span> <span class="flag">--version</span>
@@ -606,7 +606,7 @@
       </div>
     </div>
     <div class="step-body">
-      <p>This is where most people lose the plot. They install the gateway first, then wander around deciding providers. I do the opposite. Pick the cost model up front, then wire OCPlatform around it.</p>
+      <p>This is where most people lose the plot. They install the gateway first, then wander around deciding providers. I do the opposite. Pick the cost model up front, then wire OpenClaw around it.</p>
       <div class="provider-grid">
         <div class="provider-card">
           <div class="provider-badge free">Free</div>
@@ -659,7 +659,7 @@
     <div class="step-header">
       <div class="step-number">3</div>
       <div>
-        <div class="step-title">Install OCPlatform</div>
+        <div class="step-title">Install OpenClaw</div>
         <div class="step-time">2 min</div>
       </div>
     </div>
@@ -667,17 +667,17 @@
       <p>Install the CLI globally. This is the runtime, the gateway, the messaging surface, the skills loader, and the thing that keeps the whole stack stitched together.</p>
       <div class="code-block">
         <div class="code-label">Install <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> ocplatform</pre>
+        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> openclaw</pre>
       </div>
       <div class="code-block win-only">
         <div class="code-label">Windows fallback <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> ocplatform --ignore-scripts</pre>
+        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> openclaw --ignore-scripts</pre>
       </div>
       <div class="code-block">
         <div class="code-label">Verify <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">ocplatform</span> <span class="flag">--version</span></pre>
+        <pre><span class="cmd">openclaw</span> <span class="flag">--version</span></pre>
       </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>OCPlatform is installed globally</label>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>OpenClaw is installed globally</label>
     </div>
   </div>
 
@@ -693,12 +693,12 @@
       <p>First launch matters because it creates the workspace shape. That's where your agent's operating system lives: identity, memory, skills, notes, cron state, all of it.</p>
       <div class="code-block">
         <div class="code-label">First run <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">ocplatform</span></pre>
+        <pre><span class="cmd">openclaw</span></pre>
       </div>
       <div class="grid-2">
-        <div class="callout info mac-only"><span class="callout-icon">📁</span><div><strong>macOS workspace</strong><br><code>~/.ocplatform/workspace/</code></div></div>
-        <div class="callout info win-only"><span class="callout-icon">📁</span><div><strong>Windows workspace</strong><br><code>C:\Users\YOU\.ocplatform\workspace\</code></div></div>
-        <div class="callout info linux-only"><span class="callout-icon">📁</span><div><strong>Linux workspace</strong><br><code>~/.ocplatform/workspace/</code></div></div>
+        <div class="callout info mac-only"><span class="callout-icon">📁</span><div><strong>macOS workspace</strong><br><code>~/.openclaw/workspace/</code></div></div>
+        <div class="callout info win-only"><span class="callout-icon">📁</span><div><strong>Windows workspace</strong><br><code>C:\Users\YOU\.openclaw\workspace\</code></div></div>
+        <div class="callout info linux-only"><span class="callout-icon">📁</span><div><strong>Linux workspace</strong><br><code>~/.openclaw/workspace/</code></div></div>
         <div class="callout tip"><span class="callout-icon">🧠</span><div><strong>Think of the workspace as the agent's brain on disk.</strong> If it's not written there, it doesn't survive restarts.</div></div>
       </div>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The workspace is scaffolded and readable</label>
@@ -717,7 +717,7 @@
       <p>I don't cram every provider in on day one. I wire one working lane, verify it, then add the second and third lanes after the system is stable.</p>
       <div class="code-block">
         <div class="code-label">Open the config flow <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">ocplatform</span> config</pre>
+        <pre><span class="cmd">openclaw</span> config</pre>
       </div>
       <div class="file-block">
         <div class="file-header">Provider playbook</div>
@@ -734,7 +734,7 @@ $20/mo coding lane
 PRIVATE lane
 - Install Ollama
 - Pull qwen3:8b or qwen3.5:9b
-- Point OCPlatform at the local Ollama host</div>
+- Point OpenClaw at the local Ollama host</div>
       </div>
       <div class="code-block linux-only">
         <div class="code-label">Local Ollama bootstrap <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
@@ -757,11 +757,11 @@ PRIVATE lane
       <p>This is the point where it stops being a CLI and starts being infrastructure. If the gateway is healthy, the rest of the stack becomes composable.</p>
       <div class="code-block">
         <div class="code-label">Start + check <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">ocplatform</span> gateway
-<span class="cmd">ocplatform</span> status</pre>
+        <pre><span class="cmd">openclaw</span> gateway
+<span class="cmd">openclaw</span> status</pre>
       </div>
       <div class="callout warn"><span class="callout-icon">⚠️</span><div><strong>Don't keep reinstalling when you hit a config issue.</strong> If the gateway is booting, your problem is almost always routing, auth, or a bad field in config, not the install itself.</div></div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The gateway is running and `ocplatform status` looks healthy</label>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The gateway is running and `openclaw status` looks healthy</label>
     </div>
   </div>
 
@@ -778,7 +778,7 @@ PRIVATE lane
     <div class="step-body">
       <p><code>AGENTS.md</code> is the operating manual. Mine is blunt. It says what matters, what never leaks, when to ask first, and how to use memory instead of pretending the model will remember.</p>
       <div class="file-block">
-        <div class="file-header">~/.ocplatform/workspace/AGENTS.md</div>
+        <div class="file-header">~/.openclaw/workspace/AGENTS.md</div>
         <div class="file-content">## Session Startup
 1. Read SOUL.md
 2. Read USER.md
@@ -844,7 +844,7 @@ Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram</div>
       <div class="file-block">
         <div class="file-header">MEMORY.md starter</div>
         <div class="file-content">## Current Projects
-- OCPlatform
+- OpenClaw
 - Clawsuite
 - Hermes-Workspace
 - BenchLoop
@@ -877,7 +877,7 @@ Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram</div>
     <div class="step-body">
       <p>This is one of the big unlocks. I don't want a cron explosion for every little thing. I want a heartbeat loop that batches cheap checks, rotates through them, and only interrupts me when there's actually signal.</p>
       <div class="file-block">
-        <div class="file-header">~/.ocplatform/workspace/HEARTBEAT.md</div>
+        <div class="file-header">~/.openclaw/workspace/HEARTBEAT.md</div>
         <div class="file-content">## Active Checks
 - Rotate: email, calendar, weather, mentions
 - Quiet hours: 23:00-08:00
@@ -963,7 +963,7 @@ If there is no real delta, do not send a message.</div>
       </div>
     </div>
     <div class="step-body">
-      <p>OCPlatform is the runtime. Clawsuite is the cockpit. If you want dashboard views, file browsing, terminal access, chat, task boards, and agent management in one place, this is the layer that makes the stack feel like a product instead of a pile of terminals.</p>
+      <p>OpenClaw is the runtime. Clawsuite is the cockpit. If you want dashboard views, file browsing, terminal access, chat, task boards, and agent management in one place, this is the layer that makes the stack feel like a product instead of a pile of terminals.</p>
       <div class="code-block">
         <div class="code-label">Clawsuite setup <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
         <pre><span class="cmd">git</span> clone https://github.com/outsourc-e/clawsuite
@@ -981,7 +981,7 @@ If there is no real delta, do not send a message.</div>
     <div class="step-header">
       <div class="step-number">13</div>
       <div>
-        <div class="step-title">Move it onto dedicated hardware, Beelink × OCPlatform</div>
+        <div class="step-title">Move it onto dedicated hardware, Beelink × OpenClaw</div>
         <div class="step-time">15 min</div>
       </div>
     </div>
@@ -994,15 +994,15 @@ If there is no real delta, do not send a message.</div>
         <li>Good home for Ollama and lightweight local models</li>
         <li>Cleaner separation between your work machine and your agent machine</li>
       </ul>
-      <p>This is not Beelink-or-bust. Any always-on Linux box or old Mac mini works. Beelink × OCPlatform is just the cleanest default recommendation for most people.</p>
+      <p>This is not Beelink-or-bust. Any always-on Linux box or old Mac mini works. Beelink × OpenClaw is just the cleanest default recommendation for most people.</p>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The stack is running somewhere that stays on when my laptop closes</label>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>Built by Eric · Powered by OCPlatform</p>
-  <p><a href="https://github.com/ocplatform/ocplatform">GitHub</a> · <a href="<!-- DISCORD_INVITE_URL -->">Discord</a> · <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> · <a href="#">Beelink</a></p>
+  <p>Built by Eric · Powered by OpenClaw</p>
+  <p><a href="https://github.com/openclaw/openclaw">GitHub</a> · <a href="<!-- DISCORD_INVITE_URL -->">Discord</a> · <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> · <a href="#">Beelink</a></p>
 </footer>
 
 <script>
