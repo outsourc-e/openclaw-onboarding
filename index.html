@@ -88,6 +88,68 @@
       max-width: 1040px;
       margin: 30px auto 0;
     }
+    .brand-lockup {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 22px auto 0;
+      max-width: 980px;
+    }
+    .brand-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(18,18,26,0.78);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+    .brand-mark.openclaw {
+      background: radial-gradient(circle at 30% 30%, #ffb067, var(--accent));
+      color: #111;
+      font-size: 14px;
+    }
+    .brand-mark.beelink {
+      background: linear-gradient(135deg, #ff8f3a, #ffb067);
+    }
+    .brand-mark.beelink::before,
+    .brand-mark.beelink::after {
+      content: "";
+      position: absolute;
+      background: rgba(17,17,17,0.92);
+      border-radius: 999px;
+    }
+    .brand-mark.beelink::before {
+      width: 6px;
+      height: 6px;
+      left: 7px;
+      top: 7px;
+      box-shadow: 8px 0 0 rgba(17,17,17,0.92), 0 8px 0 rgba(17,17,17,0.92), 8px 8px 0 rgba(17,17,17,0.92);
+    }
+    .brand-mark.beelink::after {
+      width: 12px;
+      height: 2px;
+      bottom: 5px;
+      left: 7px;
+    }
     .hero-stat {
       background: rgba(18,18,26,0.8);
       border: 1px solid var(--border);
@@ -540,6 +602,11 @@
     <div class="hero-stat"><strong>62 Days</strong><span>Field Time</span></div>
   </div>
 
+  <div class="brand-lockup">
+    <div class="brand-chip"><span class="brand-mark openclaw">🦞</span> OpenClaw runtime</div>
+    <div class="brand-chip"><span class="brand-mark beelink"></span> Beelink always-on box</div>
+  </div>
+
   <div class="os-toggle" id="os-toggle">
     <button onclick="setOS('mac')" id="os-mac" class="active">macOS</button>
     <button onclick="setOS('win')" id="os-win">Windows</button>
@@ -630,8 +697,8 @@
           <div class="price">~$20/mo flat</div>
           <ul>
             <li>Best value if you're serious and shipping every day.</li>
-            <li>Use ChatGPT Plus for Codex coding, or run MiniMax for a cheap generalist lane.</li>
-            <li>Add Claude later for higher-stakes reasoning via OAuth or API key.</li>
+            <li>Use a ChatGPT subscription with Codex access, or run MiniMax for a cheap generalist lane.</li>
+            <li>Add Claude later for higher-stakes reasoning with a standard API key if you need it.</li>
             <li>Tradeoff: you need at least one paid subscription.</li>
           </ul>
         </div>
@@ -695,10 +762,10 @@
       </div>
     </div>
     <div class="step-body">
-      <p>First launch matters because it creates the workspace shape. That's where your agent's operating system lives: identity, memory, skills, notes, cron state, all of it.</p>
+      <p>Use the actual setup command here, not a vague first launch. The current CLI has a dedicated setup flow that initializes config and the agent workspace.</p>
       <div class="code-block">
-        <div class="code-label">First run <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span></pre>
+        <div class="code-label">Interactive setup <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">openclaw</span> setup <span class="flag">--wizard</span></pre>
       </div>
       <div class="grid-2">
         <div class="callout info mac-only"><span class="callout-icon">📁</span><div><strong>macOS workspace</strong><br><code>~/.openclaw/workspace/</code></div></div>
@@ -719,10 +786,10 @@
       </div>
     </div>
     <div class="step-body">
-      <p>I don't cram every provider in on day one. I wire one working lane, verify it, then add the second and third lanes after the system is stable.</p>
+      <p>I don't cram every provider in on day one. I wire one working lane, verify it, then add the second and third lanes after the system is stable. The current interactive command for this is <code>openclaw configure</code>.</p>
       <div class="code-block">
-        <div class="code-label">Open the config flow <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span> config</pre>
+        <div class="code-label">Interactive configure flow <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">openclaw</span> configure <span class="flag">--section</span> model <span class="flag">--section</span> gateway</pre>
       </div>
       <div class="file-block">
         <div class="file-header">Provider playbook</div>
@@ -734,7 +801,7 @@
 $20/mo coding lane
 - Log into your coding plan first
 - Route coding work to GPT-5.4 Codex or MiniMax
-- Add Claude OAuth or API key as the high-stakes review lane
+- Add Claude later with a standard API key if you want a separate oracle lane
 
 PRIVATE lane
 - Install Ollama
@@ -762,11 +829,12 @@ PRIVATE lane
       <p>This is the point where it stops being a CLI and starts being infrastructure. If the gateway is healthy, the rest of the stack becomes composable.</p>
       <div class="code-block">
         <div class="code-label">Start + check <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span> gateway
-<span class="cmd">openclaw</span> status</pre>
+        <pre><span class="cmd">openclaw</span> gateway start
+<span class="cmd">openclaw</span> gateway status
+<span class="cmd">openclaw</span> gateway health</pre>
       </div>
       <div class="callout warn"><span class="callout-icon">⚠️</span><div><strong>Don't keep reinstalling when you hit a config issue.</strong> If the gateway is booting, your problem is almost always routing, auth, or a bad field in config, not the install itself.</div></div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The gateway is running and `openclaw status` looks healthy</label>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The gateway is running and `openclaw gateway status` looks healthy</label>
     </div>
   </div>
 
