@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-os="mac">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steal My OCPlatform Setup</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #1a1a26;
+      --border: #2a2a3a;
+      --text: #e4e4ed;
+      --text-muted: #8888a0;
+      --accent: #f97316;
+      --accent-dim: #f97316aa;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --radius: 12px;
+      --shadow: 0 12px 30px rgba(0,0,0,0.28);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: #0d0d14;
+      border: 1px solid #1f1f2c;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 84px 24px 52px;
+      background: radial-gradient(circle at top, rgba(249,115,22,0.18), transparent 40%), linear-gradient(180deg, #1a1020 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(249,115,22,0.15);
+      border: 1px solid rgba(249,115,22,0.35);
+      color: #ffb47a;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      max-width: 900px;
+      margin: 0 auto;
+      color: var(--text-muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 1040px;
+      margin: 30px auto 0;
+    }
+    .hero-stat {
+      background: rgba(18,18,26,0.8);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px;
+      box-shadow: var(--shadow);
+    }
+    .hero-stat strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .hero-stat span {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px 96px;
+    }
+
+    .os-toggle {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 28px;
+      background: rgba(18,18,26,0.85);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px;
+      box-shadow: var(--shadow);
+    }
+    .os-toggle button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .os-toggle button.active {
+      background: var(--accent);
+      color: #111;
+    }
+
+    .progress-bar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+    .progress-text {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #151520;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #1f1f2b;
+    }
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #ffb067);
+      transition: width 0.2s ease;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 38px 0 18px;
+      position: sticky;
+      top: 58px;
+      z-index: 10;
+      background: linear-gradient(180deg, rgba(10,10,15,0.98), rgba(10,10,15,0.9));
+      padding: 12px 0 8px;
+    }
+    .section-label span {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .section-label hr {
+      width: 100%;
+      border: none;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 0;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .step.completed {
+      border-color: rgba(34,197,94,0.55);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.1), var(--shadow);
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 22px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .step-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(249,115,22,0.16);
+      border: 1px solid rgba(249,115,22,0.3);
+      color: var(--accent);
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .step-title {
+      font-size: 1.12rem;
+      font-weight: 780;
+      letter-spacing: -0.02em;
+    }
+    .step-time {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .step-body {
+      padding: 0 22px 22px;
+    }
+    .step-body p,
+    .step-body li {
+      color: var(--text-muted);
+    }
+    .step-body p + p,
+    .step-body ul,
+    .step-body ol,
+    .step-body .code-block,
+    .step-body .callout,
+    .step-body .file-block,
+    .step-body .provider-grid,
+    .step-body .config-table,
+    .step-body .quote,
+    .step-body .grid-2,
+    .step-body .lessons-list {
+      margin-top: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .code-block,
+    .file-block,
+    .quote,
+    .provider-card,
+    .callout,
+    .key-principle {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .code-block { overflow: hidden; }
+    .code-label,
+    .file-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 800;
+    }
+    .code-block pre,
+    .file-content {
+      padding: 16px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #d6d6e5;
+      background: #101018;
+    }
+    .copy-btn {
+      appearance: none;
+      border: 1px solid rgba(249,115,22,0.35);
+      color: #ffbb88;
+      background: rgba(249,115,22,0.12);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .copy-btn.copied {
+      background: rgba(34,197,94,0.16);
+      border-color: rgba(34,197,94,0.35);
+      color: #86efac;
+    }
+
+    .cmd { color: #f8b36c; }
+    .flag { color: #7dd3fc; }
+    .comment { color: #7d8599; }
+
+    .callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+    .callout-icon {
+      flex: 0 0 auto;
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 1px;
+    }
+    .callout.tip { border-color: rgba(59,130,246,0.35); }
+    .callout.info { border-color: rgba(34,197,94,0.35); }
+    .callout.warn { border-color: rgba(234,179,8,0.35); }
+    .callout.purple { border-color: rgba(168,85,247,0.35); }
+
+    .provider-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .provider-card {
+      padding: 18px;
+      position: relative;
+    }
+    .provider-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .provider-badge.free { background: rgba(59,130,246,0.15); color: #93c5fd; }
+    .provider-badge.recommended { background: rgba(34,197,94,0.15); color: #86efac; }
+    .provider-badge.private { background: rgba(168,85,247,0.15); color: #d8b4fe; }
+    .provider-card h4 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+    .provider-card .price {
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .provider-card ul {
+      padding-left: 18px;
+    }
+    .provider-card li {
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .config-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--card);
+    }
+    .config-table th,
+    .config-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 14px;
+    }
+    .config-table th {
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      background: rgba(255,255,255,0.03);
+    }
+    .config-table tr:last-child td { border-bottom: 0; }
+
+    .check-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      margin-top: 18px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .check-label input { display: none; }
+    .checkmark {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: #0f0f17;
+      position: relative;
+      flex: 0 0 auto;
+    }
+    .check-label input:checked + .checkmark {
+      background: rgba(34,197,94,0.18);
+      border-color: rgba(34,197,94,0.45);
+    }
+    .check-label input:checked + .checkmark::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #86efac;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .quote {
+      padding: 16px 18px;
+      color: var(--text);
+      font-size: 15px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .lessons-list {
+      display: grid;
+      gap: 14px;
+    }
+    .lesson-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(168,85,247,0.18);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .lesson-item strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .key-principle {
+      padding: 18px;
+      border-color: rgba(249,115,22,0.34);
+      margin-top: 18px;
+    }
+    .key-principle strong {
+      display: block;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .image-placeholder {
+      border: 1px dashed rgba(249,115,22,0.35);
+      border-radius: 14px;
+      padding: 26px;
+      text-align: center;
+      color: var(--text-muted);
+      background: rgba(249,115,22,0.04);
+      margin-top: 14px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 24px 60px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    footer p + p { margin-top: 8px; }
+
+    .mac-only, .win-only, .linux-only { display: none !important; }
+    html[data-os="mac"] .mac-only { display: block !important; }
+    html[data-os="win"] .win-only { display: block !important; }
+    html[data-os="linux"] .linux-only { display: block !important; }
+
+    @media (max-width: 920px) {
+      .provider-grid,
+      .hero-stats,
+      .grid-2 { grid-template-columns: 1fr; }
+      .section-label { position: static; }
+    }
+
+    @media (max-width: 640px) {
+      .container, .progress-bar { padding-left: 16px; padding-right: 16px; }
+      .hero { padding-left: 16px; padding-right: 16px; }
+      .step-header, .step-body { padding-left: 16px; padding-right: 16px; }
+      .step-header { align-items: flex-start; }
+      .step-number { width: 38px; height: 38px; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-badge">⚡ 62-Day Field Report</div>
+  <h1>Steal My <span>OCPlatform</span> Setup</h1>
+  <p>62 days. 1,215 sessions. 13,607 messages. 33,294 tool calls. 142M tokens. 2,977 commits across 3 repos. Here's exactly how my agent runs, and what I'd do differently.</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>1,215</strong><span>Sessions</span></div>
+    <div class="hero-stat"><strong>13,607</strong><span>Messages</span></div>
+    <div class="hero-stat"><strong>33,294</strong><span>Tool Calls</span></div>
+    <div class="hero-stat"><strong>142M</strong><span>Billable Tokens</span></div>
+    <div class="hero-stat"><strong>2,977</strong><span>Commits</span></div>
+    <div class="hero-stat"><strong>62 Days</strong><span>Field Time</span></div>
+  </div>
+
+  <div class="os-toggle" id="os-toggle">
+    <button onclick="setOS('mac')" id="os-mac" class="active">macOS</button>
+    <button onclick="setOS('win')" id="os-win">Windows</button>
+    <button onclick="setOS('linux')" id="os-linux">Linux</button>
+  </div>
+</section>
+
+<div class="progress-bar">
+  <span class="progress-text" id="progress-label">0 / 13</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section-label"><span>Part 1 · Install</span><hr></div>
+
+  <div class="step" data-step="1">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <div class="step-title">Install Node.js 20+ and Git</div>
+        <div class="step-time">5 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>I keep the base dead simple. OCPlatform only needs a current Node runtime and Git. If those two are right, the rest is mostly config.</p>
+      <div class="code-block">
+        <div class="code-label">Verify versions <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">node</span> <span class="flag">--version</span>
+<span class="cmd">git</span> <span class="flag">--version</span></pre>
+      </div>
+      <div class="code-block mac-only">
+        <div class="code-label">macOS <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+<span class="cmd">nvm</span> install 22
+<span class="cmd">xcode-select</span> <span class="flag">--install</span></pre>
+      </div>
+      <div class="code-block win-only">
+        <div class="code-label">Windows <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">winget</span> install OpenJS.NodeJS.LTS
+<span class="cmd">winget</span> install Git.Git</pre>
+      </div>
+      <div class="code-block linux-only">
+        <div class="code-label">Linux <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="comment"># Ubuntu / Debian</span>
+<span class="cmd">curl</span> -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+<span class="cmd">sudo</span> apt-get install -y nodejs git
+
+<span class="comment"># Or use nvm if you prefer userland installs</span>
+<span class="cmd">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</pre>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Node.js 20+ and Git are installed</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <div class="step-title">Pick your model stack before you install</div>
+        <div class="step-time">5 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>This is where most people lose the plot. They install the gateway first, then wander around deciding providers. I do the opposite. Pick the cost model up front, then wire OCPlatform around it.</p>
+      <div class="provider-grid">
+        <div class="provider-card">
+          <div class="provider-badge free">Free</div>
+          <h4>OpenRouter free models</h4>
+          <div class="price">$0</div>
+          <ul>
+            <li>Best for trying the stack without spending money.</li>
+            <li>Grab one API key from <code>openrouter.ai</code>.</li>
+            <li>Use rotating free models for chat and low-stakes tasks.</li>
+            <li>Tradeoff: rate limits and quality can swing.</li>
+          </ul>
+        </div>
+        <div class="provider-card">
+          <div class="provider-badge recommended">Recommended</div>
+          <h4>$20/mo coding plan</h4>
+          <div class="price">~$20/mo flat</div>
+          <ul>
+            <li>Best value if you're serious and shipping every day.</li>
+            <li>Use ChatGPT Plus for Codex coding, or run MiniMax for a cheap generalist lane.</li>
+            <li>Add Claude later for higher-stakes reasoning via OAuth or API key.</li>
+            <li>Tradeoff: you need at least one paid subscription.</li>
+          </ul>
+        </div>
+        <div class="provider-card">
+          <div class="provider-badge private">Private</div>
+          <h4>Local Ollama</h4>
+          <div class="price">$0 after hardware</div>
+          <ul>
+            <li>Best for privacy, offline work, and no API usage anxiety.</li>
+            <li>Install Ollama and pull <code>qwen3:8b</code> or <code>qwen3.5:9b</code>.</li>
+            <li>Great on a dedicated box or secondary machine.</li>
+            <li>Tradeoff: you need hardware, and the reasoning ceiling is lower.</li>
+          </ul>
+        </div>
+      </div>
+
+      <table class="config-table">
+        <tr><th>Path</th><th>What I use it for</th><th>Why</th></tr>
+        <tr><td>OpenRouter</td><td>Experiments, fallback models</td><td>One key, broad routing surface</td></tr>
+        <tr><td>Codex / MiniMax</td><td>Coding lane</td><td>Best price-to-output ratio</td></tr>
+        <tr><td>Claude</td><td>Oracle lane</td><td>Critique, architecture, high-stakes review</td></tr>
+        <tr><td>Ollama</td><td>Local helper</td><td>Cheap background tasks, private workflows</td></tr>
+      </table>
+
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>I picked a cost model before touching config</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="3">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div>
+        <div class="step-title">Install OCPlatform</div>
+        <div class="step-time">2 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Install the CLI globally. This is the runtime, the gateway, the messaging surface, the skills loader, and the thing that keeps the whole stack stitched together.</p>
+      <div class="code-block">
+        <div class="code-label">Install <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> ocplatform</pre>
+      </div>
+      <div class="code-block win-only">
+        <div class="code-label">Windows fallback <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> ocplatform --ignore-scripts</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-label">Verify <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ocplatform</span> <span class="flag">--version</span></pre>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>OCPlatform is installed globally</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="4">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div>
+        <div class="step-title">Run it once and let the wizard scaffold the workspace</div>
+        <div class="step-time">3 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>First launch matters because it creates the workspace shape. That's where your agent's operating system lives: identity, memory, skills, notes, cron state, all of it.</p>
+      <div class="code-block">
+        <div class="code-label">First run <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ocplatform</span></pre>
+      </div>
+      <div class="grid-2">
+        <div class="callout info mac-only"><span class="callout-icon">📁</span><div><strong>macOS workspace</strong><br><code>~/.ocplatform/workspace/</code></div></div>
+        <div class="callout info win-only"><span class="callout-icon">📁</span><div><strong>Windows workspace</strong><br><code>C:\Users\YOU\.ocplatform\workspace\</code></div></div>
+        <div class="callout info linux-only"><span class="callout-icon">📁</span><div><strong>Linux workspace</strong><br><code>~/.ocplatform/workspace/</code></div></div>
+        <div class="callout tip"><span class="callout-icon">🧠</span><div><strong>Think of the workspace as the agent's brain on disk.</strong> If it's not written there, it doesn't survive restarts.</div></div>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The workspace is scaffolded and readable</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="5">
+    <div class="step-header">
+      <div class="step-number">5</div>
+      <div>
+        <div class="step-title">Configure the provider lane you chose</div>
+        <div class="step-time">5 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>I don't cram every provider in on day one. I wire one working lane, verify it, then add the second and third lanes after the system is stable.</p>
+      <div class="code-block">
+        <div class="code-label">Open the config flow <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ocplatform</span> config</pre>
+      </div>
+      <div class="file-block">
+        <div class="file-header">Provider playbook</div>
+        <div class="file-content">FREE lane
+- Generate one OpenRouter key
+- Set a free model as your default chat lane
+- Add a paid fallback later when you hit rate limits
+
+$20/mo coding lane
+- Log into your coding plan first
+- Route coding work to GPT-5.4 Codex or MiniMax
+- Add Claude OAuth or API key as the high-stakes review lane
+
+PRIVATE lane
+- Install Ollama
+- Pull qwen3:8b or qwen3.5:9b
+- Point OCPlatform at the local Ollama host</div>
+      </div>
+      <div class="code-block linux-only">
+        <div class="code-label">Local Ollama bootstrap <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">curl</span> -fsSL https://ollama.com/install.sh | sh
+<span class="cmd">ollama</span> pull qwen3:8b</pre>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>One provider lane is configured and ready</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="6">
+    <div class="step-header">
+      <div class="step-number">6</div>
+      <div>
+        <div class="step-title">Start the gateway and make sure it stays up</div>
+        <div class="step-time">2 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>This is the point where it stops being a CLI and starts being infrastructure. If the gateway is healthy, the rest of the stack becomes composable.</p>
+      <div class="code-block">
+        <div class="code-label">Start + check <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">ocplatform</span> gateway
+<span class="cmd">ocplatform</span> status</pre>
+      </div>
+      <div class="callout warn"><span class="callout-icon">⚠️</span><div><strong>Don't keep reinstalling when you hit a config issue.</strong> If the gateway is booting, your problem is almost always routing, auth, or a bad field in config, not the install itself.</div></div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The gateway is running and `ocplatform status` looks healthy</label>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Part 2 · Personalize</span><hr></div>
+
+  <div class="step" data-step="7">
+    <div class="step-header">
+      <div class="step-number">7</div>
+      <div>
+        <div class="step-title">Write AGENTS.md like an operator, not like a prompt engineer</div>
+        <div class="step-time">8 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p><code>AGENTS.md</code> is the operating manual. Mine is blunt. It says what matters, what never leaks, when to ask first, and how to use memory instead of pretending the model will remember.</p>
+      <div class="file-block">
+        <div class="file-header">~/.ocplatform/workspace/AGENTS.md</div>
+        <div class="file-content">## Session Startup
+1. Read SOUL.md
+2. Read USER.md
+3. Read today's memory file
+4. If in main session, also read MEMORY.md
+
+## Red Lines
+- Don't exfiltrate private data
+- Ask before external actions
+- trash > rm
+
+## Memory
+- If you want to remember something, write it to a file
+- MEMORY.md = curated long-term memory
+- memory/YYYY-MM-DD.md = daily log</div>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>AGENTS.md has clear rules, boundaries, and startup steps</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="8">
+    <div class="step-header">
+      <div class="step-number">8</div>
+      <div>
+        <div class="step-title">Define identity with SOUL.md and USER.md</div>
+        <div class="step-time">8 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>This is where most agents feel fake. They're told to be "helpful" instead of being somebody. <code>SOUL.md</code> gives the agent a voice. <code>USER.md</code> tells it who it's working for and what "helpful" actually means in context.</p>
+      <div class="grid-2">
+        <div class="file-block">
+          <div class="file-header">SOUL.md</div>
+          <div class="file-content">Be genuinely helpful, not performatively helpful.
+Have opinions.
+Be resourceful before asking.
+Earn trust through competence.
+Speak to Eric like a competent founder who values speed, clarity, and leverage.</div>
+        </div>
+        <div class="file-block">
+          <div class="file-header">USER.md</div>
+          <div class="file-content">Name: Eric
+Timezone: America/New_York
+What he values: speed, clarity, leverage
+Skip: fluff, over-explaining, AI marketing talk
+Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram</div>
+        </div>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The agent has a defined voice and a real user profile</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="9">
+    <div class="step-header">
+      <div class="step-number">9</div>
+      <div>
+        <div class="step-title">Seed MEMORY.md on day 1</div>
+        <div class="step-time">6 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Don't wait for the model to magically accumulate context. Seed the memory you know you'll need every week: repos, devices, current priorities, naming conventions, and the user's preferences.</p>
+      <div class="file-block">
+        <div class="file-header">MEMORY.md starter</div>
+        <div class="file-content">## Current Projects
+- OCPlatform
+- Clawsuite
+- Hermes-Workspace
+- BenchLoop
+
+## Infrastructure
+- Main machine: MacBook Pro
+- PC2 local model box: RTX 3070
+- Tailscale enabled
+
+## Preferences
+- Be direct
+- Skip fluff
+- Write things down instead of pretending to remember</div>
+      </div>
+      <div class="callout info"><span class="callout-icon">📌</span><div><strong>Keep MEMORY.md curated.</strong> I treat it like working memory, not a dumping ground. The daily notes are where the raw volume goes.</div></div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>MEMORY.md contains the day-1 context the agent actually needs</label>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Part 3 · Steal My Setup</span><hr></div>
+
+  <div class="step" data-step="10">
+    <div class="step-header">
+      <div class="step-number">10</div>
+      <div>
+        <div class="step-title">Use heartbeats for background checks without becoming annoying</div>
+        <div class="step-time">10 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>This is one of the big unlocks. I don't want a cron explosion for every little thing. I want a heartbeat loop that batches cheap checks, rotates through them, and only interrupts me when there's actually signal.</p>
+      <div class="file-block">
+        <div class="file-header">~/.ocplatform/workspace/HEARTBEAT.md</div>
+        <div class="file-content">## Active Checks
+- Rotate: email, calendar, weather, mentions
+- Quiet hours: 23:00-08:00
+- If nothing needs attention, stay quiet
+- If something matters, alert once with the useful detail
+
+## Background Work
+- Review recent memory files
+- Update MEMORY.md if the pattern is durable
+- Check project repos for obvious drift</div>
+      </div>
+      <div class="file-block">
+        <div class="file-header">HB_SIGNAL.md</div>
+        <div class="file-content"># HB_SIGNAL.md
+
+- Morning pass: weather + calendar
+- Midday pass: mentions + urgent inbox
+- Late afternoon pass: project drift, open PRs, notifications
+- Evening pass: upcoming meetings, inbox, memory cleanup
+
+Rule: be proactive without being annoying.
+If there is no real delta, do not send a message.</div>
+      </div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Heartbeat rules are written and the checks rotate on purpose</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="11">
+    <div class="step-header">
+      <div class="step-number">11</div>
+      <div>
+        <div class="step-title">Route by importance and cut costs by 70%+</div>
+        <div class="step-time">12 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>The expensive mistake is using the same premium model for everything. I route by task shape. Cheap checks go to cheap models. High-stakes thinking gets the premium lane. That's how I got real output without lighting money on fire.</p>
+      <table class="config-table">
+        <tr><th>Lane</th><th>Model</th><th>Why it belongs there</th></tr>
+        <tr><td>Heartbeats</td><td>Gemini Flash</td><td>Nearly free, fast, good enough for lightweight checks</td></tr>
+        <tr><td>Main chat</td><td>Claude Sonnet</td><td>Reliable balance of speed, quality, and tone</td></tr>
+        <tr><td>Coding</td><td>GPT-5.4 Codex or MiniMax</td><td>Best value for implementation throughput</td></tr>
+        <tr><td>Heavy reasoning</td><td>Claude Opus</td><td>Oracle pattern for money, architecture, and public output</td></tr>
+        <tr><td>Sub-agents</td><td>Delegated lane</td><td>Long tasks run in the background while the parent stays responsive</td></tr>
+      </table>
+      <div class="quote">2026-02-18 → 2026-04-21: 1,215 sessions, 13,607 messages, 33,294 tool calls, 142M billable tokens, 2,977 commits across Clawsuite, Hermes-Workspace, and BenchLoop. The routing is not theory. It held up under volume.</div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Model routing is explicit and tied to cost, not vibes</label>
+    </div>
+  </div>
+
+  <div class="step" style="border-color: rgba(168,85,247,0.55);">
+    <div class="step-header">
+      <div class="step-number" style="background: rgba(168,85,247,0.16); border-color: rgba(168,85,247,0.3); color: #d8b4fe;">★</div>
+      <div>
+        <div class="step-title">Steal My Setup, the six rules that actually matter</div>
+        <div class="step-time">What I'd keep if you deleted everything else</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="lessons-list">
+        <div class="lesson-item"><strong>1. Keep MEMORY.md under 80 lines.</strong><span>Raw notes belong in <code>memory/YYYY-MM-DD.md</code>. MEMORY is curated wisdom. The daily file is the journal.</span></div>
+        <div class="lesson-item"><strong>2. Write, don't mental-note.</strong><span>Agents restart. Context compacts. If a lesson matters, write it to disk or it's gone.</span></div>
+        <div class="lesson-item"><strong>3. Use the oracle pattern.</strong><span>When the stakes are money, public posts, or architecture, spawn Claude Opus as a critique pass before you ship.</span></div>
+        <div class="lesson-item"><strong>4. HB_SIGNAL beats cron for batched checks.</strong><span>Use cron when exact timing matters. Use heartbeat loops when you want rotating checks that can drift a little and stay cheap.</span></div>
+        <div class="lesson-item"><strong>5. Sub-agents are for long work.</strong><span>The parent should stay responsive. The child should do the 30-minute task and report back when it's done.</span></div>
+        <div class="lesson-item"><strong>6. Cost routing is a feature.</strong><span>Flash for checks, Sonnet for chat, Opus for oracles, Codex for code. Don't pay premium rates for low-value work.</span></div>
+      </div>
+      <div class="key-principle">
+        <strong>Key Principle</strong>
+        <div><strong style="display:inline; color: var(--text); font-size: 16px; text-transform:none; letter-spacing:0;">Customizing isn't the skill. Output is.</strong> The agent handles the background work. You get 20-30% more done. More reps turns into better signal, and better signal turns into better outcomes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Part 4 · Level Up</span><hr></div>
+
+  <div class="step" data-step="12">
+    <div class="step-header">
+      <div class="step-number">12</div>
+      <div>
+        <div class="step-title">Add Clawsuite as the visual command center</div>
+        <div class="step-time">10 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>OCPlatform is the runtime. Clawsuite is the cockpit. If you want dashboard views, file browsing, terminal access, chat, task boards, and agent management in one place, this is the layer that makes the stack feel like a product instead of a pile of terminals.</p>
+      <div class="code-block">
+        <div class="code-label">Clawsuite setup <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">git</span> clone https://github.com/outsourc-e/clawsuite
+<span class="cmd">cd</span> clawsuite
+<span class="cmd">pnpm</span> install
+<span class="cmd">pnpm</span> dev</pre>
+      </div>
+      <div class="callout tip"><span class="callout-icon">🖥️</span><div><strong>Runs locally on port 3000.</strong> You get dashboard views, file explorer, terminal, task board, chat, and agent management UI against the same gateway.</div></div>
+      <div class="image-placeholder"><!-- CLAWSUITE_SCREENSHOT -->Clawsuite screenshot goes here</div>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Clawsuite is running and connected to the gateway</label>
+    </div>
+  </div>
+
+  <div class="step" data-step="13">
+    <div class="step-header">
+      <div class="step-number">13</div>
+      <div>
+        <div class="step-title">Move it onto dedicated hardware, Beelink × OCPlatform</div>
+        <div class="step-time">15 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>If you're running this every day, get it off your laptop. A small always-on box wins on uptime, power draw, thermals, and the simple fact that your agent doesn't disappear when you close the lid.</p>
+      <div class="callout purple"><span class="callout-icon">⚙️</span><div><strong>Beelink SER-series is the clean recommendation.</strong> Enough CPU for the gateway, enough headroom for background jobs, and a much nicer place to park local models than your daily driver machine.</div></div>
+      <ul style="padding-left: 20px;">
+        <li>24/7 uptime without laptop sleep issues</li>
+        <li>Cheap power draw for always-on background work</li>
+        <li>Good home for Ollama and lightweight local models</li>
+        <li>Cleaner separation between your work machine and your agent machine</li>
+      </ul>
+      <p>This is not Beelink-or-bust. Any always-on Linux box or old Mac mini works. Beelink × OCPlatform is just the cleanest default recommendation for most people.</p>
+      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The stack is running somewhere that stays on when my laptop closes</label>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Built by Eric · Powered by OCPlatform</p>
+  <p><a href="https://github.com/ocplatform/ocplatform">GitHub</a> · <a href="<!-- DISCORD_INVITE_URL -->">Discord</a> · <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> · <a href="#">Beelink</a></p>
+</footer>
+
+<script>
+  const TOTAL_STEPS = 13;
+
+  function updateProgress() {
+    const checks = document.querySelectorAll('.check-label input[type="checkbox"]');
+    let done = 0;
+    checks.forEach((c) => {
+      if (c.checked) {
+        done++;
+        c.closest('.step')?.classList.add('completed');
+      } else {
+        c.closest('.step')?.classList.remove('completed');
+      }
+    });
+    const pct = Math.round((done / TOTAL_STEPS) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = done + ' / ' + TOTAL_STEPS;
+    const state = Array.from(checks).map(c => c.checked);
+    localStorage.setItem('ocplatform-field-report-progress', JSON.stringify(state));
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+
+  function setOS(os) {
+    document.documentElement.setAttribute('data-os', os);
+    document.getElementById('os-mac').classList.toggle('active', os === 'mac');
+    document.getElementById('os-win').classList.toggle('active', os === 'win');
+    document.getElementById('os-linux').classList.toggle('active', os === 'linux');
+    localStorage.setItem('ocplatform-field-report-os', os);
+  }
+
+  (function initOS() {
+    const saved = localStorage.getItem('ocplatform-field-report-os');
+    if (saved && ['mac', 'win', 'linux'].includes(saved)) {
+      setOS(saved);
+      return;
+    }
+    const ua = navigator.userAgent.toLowerCase();
+    const platform = (navigator.platform || '').toLowerCase();
+    if (platform.includes('mac') || ua.includes('mac')) return setOS('mac');
+    if (platform.includes('win') || ua.includes('win')) return setOS('win');
+    return setOS('linux');
+  })();
+
+  (function initProgress() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('ocplatform-field-report-progress') || '[]');
+      const checks = document.querySelectorAll('.check-label input[type="checkbox"]');
+      saved.forEach((value, index) => {
+        if (checks[index]) checks[index].checked = value;
+      });
+    } catch {}
+    updateProgress();
+  })();
+</script>
+
+</body>
+</html>
