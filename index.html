@@ -527,9 +527,9 @@
 <body>
 
 <section class="hero">
-  <div class="hero-badge">⚡ 62-Day Field Report</div>
+  <div class="hero-badge">⚡ Beelink × OpenClaw Hackathon Entry</div>
   <h1>Steal My <span>OpenClaw</span> Setup</h1>
-  <p>62 days. 1,215 sessions. 13,607 messages. 33,294 tool calls. 142M tokens. 2,977 commits across 3 repos. Here's exactly how my agent runs, and what I'd do differently.</p>
+  <p>62 days. 1,215 sessions. 13,607 messages. 33,294 tool calls. 142M tokens. 2,977 commits across 3 repos. Here's exactly how my agent runs, why it belongs on a dedicated Beelink box, and what I'd do differently.</p>
 
   <div class="hero-stats">
     <div class="hero-stat"><strong>1,215</strong><span>Sessions</span></div>
@@ -544,6 +544,11 @@
     <button onclick="setOS('mac')" id="os-mac" class="active">macOS</button>
     <button onclick="setOS('win')" id="os-win">Windows</button>
     <button onclick="setOS('linux')" id="os-linux">Linux</button>
+  </div>
+
+  <div class="callout purple" style="max-width: 980px; margin: 24px auto 0; text-align: left;">
+    <span class="callout-icon">🏁</span>
+    <div><strong>This page is the Beelink × OpenClaw hackathon build.</strong> The thesis is simple: an always-on mini PC is the right home for a real agent. Better uptime, cheaper power, local model headroom, and no laptop-lid failure mode.</div>
   </div>
 </section>
 
@@ -986,15 +991,40 @@ If there is no real delta, do not send a message.</div>
       </div>
     </div>
     <div class="step-body">
-      <p>If you're running this every day, get it off your laptop. A small always-on box wins on uptime, power draw, thermals, and the simple fact that your agent doesn't disappear when you close the lid.</p>
+      <p>If you're running this every day, get it off your laptop. A small always-on box wins on uptime, power draw, thermals, and the simple fact that your agent doesn't disappear when you close the lid. That's the whole reason this fits the Beelink × OpenClaw hackathon so well.</p>
       <div class="callout purple"><span class="callout-icon">⚙️</span><div><strong>Beelink SER-series is the clean recommendation.</strong> Enough CPU for the gateway, enough headroom for background jobs, and a much nicer place to park local models than your daily driver machine.</div></div>
+      <div class="grid-2">
+        <div class="file-block">
+          <div class="file-header">Recommended Beelink setup</div>
+          <div class="file-content">Hardware
+- Beelink SER-series mini PC
+- 32GB RAM if you want local models too
+- 1TB SSD for workspaces, repos, and model files
+
+What runs on it
+- OpenClaw gateway
+- Clawsuite
+- Ollama for qwen3:8b / qwen3.5:9b
+- Background jobs, heartbeats, cron, and long-lived sessions</div>
+        </div>
+        <div class="file-block">
+          <div class="file-header">Why it fits the hackathon</div>
+          <div class="file-content">The hackathon angle is not "here is an app on a box."
+It's that a dedicated mini PC changes the quality of the agent:
+- always on
+- cheaper to leave running
+- stable home for local inference
+- separate from the founder's daily machine
+- better for long-lived background work</div>
+        </div>
+      </div>
       <ul style="padding-left: 20px;">
         <li>24/7 uptime without laptop sleep issues</li>
         <li>Cheap power draw for always-on background work</li>
         <li>Good home for Ollama and lightweight local models</li>
         <li>Cleaner separation between your work machine and your agent machine</li>
       </ul>
-      <p>This is not Beelink-or-bust. Any always-on Linux box or old Mac mini works. Beelink × OpenClaw is just the cleanest default recommendation for most people.</p>
+      <p>This is not Beelink-or-bust. Any always-on Linux box or old Mac mini works. Beelink × OpenClaw is just the cleanest default recommendation for most people, which is exactly why I'm centering it in this build.</p>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The stack is running somewhere that stays on when my laptop closes</label>
     </div>
   </div>
@@ -1002,7 +1032,7 @@ If there is no real delta, do not send a message.</div>
 
 <footer>
   <p>Built by Eric · Powered by OpenClaw</p>
-  <p><a href="https://github.com/openclaw/openclaw">GitHub</a> · <a href="<!-- DISCORD_INVITE_URL -->">Discord</a> · <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> · <a href="#">Beelink</a></p>
+  <p><a href="https://github.com/openclaw/openclaw">GitHub</a> · <a href="<!-- DISCORD_INVITE_URL -->">Discord</a> · <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> · <a href="https://www.bee-link.com/">Beelink</a></p>
 </footer>
 
 <script>
