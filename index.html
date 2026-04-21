@@ -1193,8 +1193,13 @@ PRIVATE lane
 ## Memory
 - If you want to remember something, write it to a file
 - MEMORY.md = curated long-term memory
-- memory/YYYY-MM-DD.md = daily log</div>
+- memory/YYYY-MM-DD.md = daily log
+
+## Heartbeats vs Cron
+- Heartbeat = batched flexible checks
+- Cron = exact timing and isolated tasks</div>
       </div>
+      <div class="callout info"><span class="callout-icon">🧭</span><div><strong>The job of AGENTS.md is to remove ambiguity.</strong> Startup sequence, memory rules, red lines, heartbeat posture, when to ask first. The better this file is, the less the model improvises nonsense.</div></div>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>AGENTS.md has clear rules, boundaries, and startup steps</label>
     </div>
   </div>
@@ -1216,6 +1221,7 @@ PRIVATE lane
 Have opinions.
 Be resourceful before asking.
 Earn trust through competence.
+Remember you're a guest in someone's life.
 Speak to Eric like a competent founder who values speed, clarity, and leverage.</div>
         </div>
         <div class="file-block">
@@ -1224,9 +1230,11 @@ Speak to Eric like a competent founder who values speed, clarity, and leverage.<
 Timezone: America/New_York
 What he values: speed, clarity, leverage
 Skip: fluff, over-explaining, AI marketing talk
-Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram</div>
+Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram
+What he wants: systems thinking, leverage, shipped output</div>
         </div>
       </div>
+      <div class="quote">A useful agent needs both identity and audience. SOUL.md answers "who am I?" USER.md answers "who am I serving and what do they actually care about?"</div>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The agent has a defined voice and a real user profile</label>
     </div>
   </div>
@@ -1257,9 +1265,14 @@ Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram</div>
 ## Preferences
 - Be direct
 - Skip fluff
-- Write things down instead of pretending to remember</div>
+- Write things down instead of pretending to remember
+
+## Naming
+- OpenClaw, not OCPlatform
+- Clawsuite, not ClawSuite</div>
       </div>
       <div class="callout info"><span class="callout-icon">📌</span><div><strong>Keep MEMORY.md curated.</strong> I treat it like working memory, not a dumping ground. The daily notes are where the raw volume goes.</div></div>
+      <div class="callout purple"><span class="callout-icon">🧠</span><div><strong>Memory architecture is the unlock:</strong> <code>MEMORY.md</code> for durable context, daily files for raw logs, heartbeat cleanup for maintenance. This is what makes the agent compound instead of reset emotionally and operationally every session.</div></div>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>MEMORY.md contains the day-1 context the agent actually needs</label>
     </div>
   </div>
@@ -1324,6 +1337,7 @@ If there is no real delta, do not send a message.</div>
         <tr><td>Sub-agents</td><td>Delegated lane</td><td>Long tasks run in the background while the parent stays responsive</td></tr>
       </table>
       <div class="quote">2026-02-18 → 2026-04-21: 1,215 sessions, 13,607 messages, 33,294 tool calls, 142M billable tokens, 2,977 commits across Clawsuite, Hermes-Workspace, and BenchLoop. The routing is not theory. It held up under volume.</div>
+      <div class="callout tip"><span class="callout-icon">💸</span><div><strong>Cost routing is a product feature.</strong> You do not win by always picking the smartest model. You win by matching model quality to task importance and reserving premium reasoning for moments that actually justify it.</div></div>
       <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Model routing is explicit and tied to cost, not vibes</label>
     </div>
   </div>
@@ -1344,6 +1358,21 @@ If there is no real delta, do not send a message.</div>
         <div class="lesson-item"><strong>4. HB_SIGNAL beats cron for batched checks.</strong><span>Use cron when exact timing matters. Use heartbeat loops when you want rotating checks that can drift a little and stay cheap.</span></div>
         <div class="lesson-item"><strong>5. Sub-agents are for long work.</strong><span>The parent should stay responsive. The child should do the 30-minute task and report back when it's done.</span></div>
         <div class="lesson-item"><strong>6. Cost routing is a feature.</strong><span>Flash for checks, Sonnet for chat, Opus for oracles, Codex for code. Don't pay premium rates for low-value work.</span></div>
+      </div>
+      <div class="visual-panel">
+        <div class="visual-header">
+          <div class="visual-title">Cognitive framework</div>
+          <code>the part that compounds</code>
+        </div>
+        <div class="visual-body">
+          <div class="grid-2">
+            <div class="callout info"><span class="callout-icon">1️⃣</span><div><strong>Identify what already exists.</strong> Read files, inspect state, and avoid rebuilding from scratch when the answer is already in the workspace.</div></div>
+            <div class="callout info"><span class="callout-icon">2️⃣</span><div><strong>State the approach in one sentence.</strong> It keeps execution crisp and makes tradeoffs visible before work begins.</div></div>
+            <div class="callout info"><span class="callout-icon">3️⃣</span><div><strong>Decompose the work.</strong> Break multi-step tasks into explicit chunks, then execute in order instead of thrashing.</div></div>
+            <div class="callout info"><span class="callout-icon">4️⃣</span><div><strong>Verify before claiming done.</strong> Run the check, re-read the file, inspect the output, catch your own bug.</div></div>
+          </div>
+          <div class="callout purple"><span class="callout-icon">🧪</span><div><strong>Critique loops matter.</strong> For public content, architecture, launches, and money decisions: draft → critique → revise once. That single extra loop is where the quality jump comes from.</div></div>
+        </div>
       </div>
       <div class="key-principle">
         <strong>Key Principle</strong>
