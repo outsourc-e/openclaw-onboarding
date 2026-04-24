@@ -547,9 +547,10 @@
       </div>
       <div class="cta-row">
         <a class="nav-link" href="#video">Video</a>
-        <a class="nav-link" href="#framework">Framework</a>
         <a class="nav-link" href="#install">Install</a>
-        <a class="nav-link" href="#optimizations">Optimizations</a>
+        <a class="nav-link" href="#framework">Framework</a>
+        <a class="nav-link" href="#oracle">Oracle</a>
+        <a class="nav-link" href="#optimizations">Routing</a>
         <a class="nav-link" href="#why-beelink">Hardware</a>
         <a class="btn btn-primary" href="#video">Watch install →</a>
       </div>
@@ -588,65 +589,104 @@
     </section>
 
 
-    <!-- STACK OVERVIEW -->
-    <section class="block" id="stack">
-      <div class="section-eyebrow">What you're installing</div>
-      <h2 class="section-title">Three layers, one setup.</h2>
-      <p class="section-lede">
-        OpenClaw is the agent runtime. Clawsuite is the visual command center. Beelink is the always-on hardware. Each piece earns its keep.
-      </p>
-      <div class="stack-grid">
-        <div class="stack-card">
-          <div class="icon">🦞</div>
-          <h3>OpenClaw</h3>
-          <p>The runtime that orchestrates everything — model routing, tools, skills, memory, multi-agent spawning.</p>
-          <ul>
-            <li>Route models by task importance</li>
-            <li>Tool registry with 200+ functions</li>
-            <li>Persistent daily + long-term memory</li>
-            <li>Free open-source harness</li>
-          </ul>
-        </div>
-        <div class="stack-card">
-          <div class="icon">🖥️</div>
-          <h3>Clawsuite</h3>
-          <p>The desktop command center. Chat surface, agent management, session history, and one-click deploy.</p>
-          <ul>
-            <li>Electron app, macOS + Windows + Linux</li>
-            <li>Visual inspector for agent runs</li>
-            <li>322★ on GitHub, 30k+ clones</li>
-            <li>Open source, MIT</li>
-          </ul>
-        </div>
-        <div class="stack-card">
-          <div class="icon">⚡</div>
-          <h3>Beelink</h3>
-          <p>The always-on hardware. A Beelink mini PC keeps the agent running 24/7, even when your laptop sleeps.</p>
-          <ul>
-            <li>SER9 Pro 370 / SER10 MAX 470 recommended</li>
-            <li>Runs local models via Ollama + LM Studio</li>
-            <li>Silent, low-power, desk-sized</li>
-            <li>Pre-installed OpenClaw SSD available</li>
-          </ul>
-        </div>
+    <!-- INSTALL STEPS -->
+    <section class="block" id="install">
+      <div class="section-eyebrow">Copy. Paste. Done.</div>
+      <h2 class="section-title">The install, step by step.</h2>
+      <p class="section-lede">Based on the current OpenClaw onboarding flow: install the CLI, run onboard, connect your model, then point Clawsuite at the gateway.</p>
+
+      <div class="os-tabs">
+        <button class="os-tab active" data-os="mac">macOS / Linux</button>
+        <button class="os-tab" data-os="win">Windows</button>
       </div>
+
+      <div class="step"><div class="step-num">1</div><div>
+        <h3>Install Node.js and Git</h3>
+        <p>OpenClaw recommends Node 24, or Node 22.16+ at minimum.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code># Install Node via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+nvm install 24
+
+# Git via Xcode Command Line Tools (macOS)
+xcode-select --install
+
+# Verify
+node --version
+git --version</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># Using winget (built into Windows 11)
+winget install OpenJS.NodeJS.LTS
+winget install Git.Git
+
+# Or download installers manually:
+# Node: https://nodejs.org
+# Git:  https://git-scm.com
+
+# Verify in a new PowerShell window
+node --version
+git --version</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">2</div><div>
+        <h3>Install OpenClaw</h3>
+        <p>Use the published npm package. This is the current recommended install path.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code>npm install -g openclaw@latest
+
+# Verify
+openclaw --version</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># If PowerShell blocks install scripts, use --ignore-scripts first
+npm install -g openclaw@latest --ignore-scripts
+
+# Verify
+openclaw --version</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">3</div><div>
+        <h3>Run onboarding</h3>
+        <p>This is the current first-run flow. It installs the daemon and walks you through provider/auth setup.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code>openclaw onboard --install-daemon</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code>openclaw onboard --install-daemon
+
+# If execution is blocked, run once in PowerShell:
+# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">4</div><div>
+        <h3>Optional: connect Claude Code</h3>
+        <p>If you use Claude Pro or Max, this is a strong add-on for coding and deep reasoning inside OpenClaw.</p>
+<pre><button class="copy-btn">Copy</button><code>npm install -g @anthropic-ai/claude-code
+claude setup-token
+
+# Use the token during OpenClaw onboarding/config when prompted</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">5</div><div>
+        <h3>Verify the gateway</h3>
+        <p>After onboarding, confirm the gateway is live on port 18789.</p>
+<pre><button class="copy-btn">Copy</button><code>openclaw gateway --port 18789 --verbose</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">6</div><div>
+        <h3>Install Clawsuite (optional UI)</h3>
+        <p>Clawsuite is the desktop control center. Point it at your Beelink gateway once OpenClaw is running.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code># Download: https://github.com/outsourc-e/clawsuite/releases
+brew install --cask clawsuite
+
+# Settings → Gateway URL → http://localhost:18789
+# Remote over Tailscale → http://&lt;beelink-ip&gt;:18789</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># Download the .exe installer from:
+# https://github.com/outsourc-e/clawsuite/releases
+
+# Settings → Gateway URL → http://localhost:18789
+# Remote over Tailscale → http://&lt;beelink-ip&gt;:18789</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">7</div><div>
+        <h3>Send your first message</h3>
+        <p>Once the gateway is up, test the assistant directly from the CLI or through Clawsuite.</p>
+<pre><button class="copy-btn">Copy</button><code>openclaw agent --message "hello, are you running?" --thinking high</code></pre>
+      </div></div>
     </section>
 
-    <!-- STATS STRIP -->
-    <section class="block" id="proof">
-      <div class="section-eyebrow">Battle-tested</div>
-      <h2 class="section-title">The agent that wrote this setup.</h2>
-      <p class="section-lede">
-        These numbers are from 65 days of real operation — not a mockup. Same agent. Same harness. Same install process you're about to run.
-      </p>
-      <div class="stats-strip">
-        <div class="stat-item"><div class="num">65</div><div class="label">Days operated</div></div>
-        <div class="stat-item"><div class="num">1,215</div><div class="label">Sessions</div></div>
-        <div class="stat-item"><div class="num">33,294</div><div class="label">Tool calls</div></div>
-        <div class="stat-item"><div class="num">142M</div><div class="label">Billable tokens</div></div>
-        <div class="stat-item"><div class="num">3,469</div><div class="label">Commits shipped</div></div>
-      </div>
-    </section>
     <!-- THE FRAMEWORK -->
     <section class="block" id="framework">
       <div class="section-eyebrow">Steal my framework</div>
@@ -827,104 +867,6 @@ not a question.</code></pre>
 # Reply format: one-line alert OR "HB_ACK"</code></pre>
       </div>
     </section>
-    <!-- INSTALL STEPS -->
-    <section class="block" id="install">
-      <div class="section-eyebrow">Copy. Paste. Done.</div>
-      <h2 class="section-title">The install, step by step.</h2>
-      <p class="section-lede">Based on the current OpenClaw onboarding flow: install the CLI, run onboard, connect your model, then point Clawsuite at the gateway.</p>
-
-      <div class="os-tabs">
-        <button class="os-tab active" data-os="mac">macOS / Linux</button>
-        <button class="os-tab" data-os="win">Windows</button>
-      </div>
-
-      <div class="step"><div class="step-num">1</div><div>
-        <h3>Install Node.js and Git</h3>
-        <p>OpenClaw recommends Node 24, or Node 22.16+ at minimum.</p>
-<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code># Install Node via nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-nvm install 24
-
-# Git via Xcode Command Line Tools (macOS)
-xcode-select --install
-
-# Verify
-node --version
-git --version</code></pre>
-<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># Using winget (built into Windows 11)
-winget install OpenJS.NodeJS.LTS
-winget install Git.Git
-
-# Or download installers manually:
-# Node: https://nodejs.org
-# Git:  https://git-scm.com
-
-# Verify in a new PowerShell window
-node --version
-git --version</code></pre>
-      </div></div>
-
-      <div class="step"><div class="step-num">2</div><div>
-        <h3>Install OpenClaw</h3>
-        <p>Use the published npm package. This is the current recommended install path.</p>
-<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code>npm install -g openclaw@latest
-
-# Verify
-openclaw --version</code></pre>
-<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># If PowerShell blocks install scripts, use --ignore-scripts first
-npm install -g openclaw@latest --ignore-scripts
-
-# Verify
-openclaw --version</code></pre>
-      </div></div>
-
-      <div class="step"><div class="step-num">3</div><div>
-        <h3>Run onboarding</h3>
-        <p>This is the current first-run flow. It installs the daemon and walks you through provider/auth setup.</p>
-<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code>openclaw onboard --install-daemon</code></pre>
-<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code>openclaw onboard --install-daemon
-
-# If execution is blocked, run once in PowerShell:
-# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code></pre>
-      </div></div>
-
-      <div class="step"><div class="step-num">4</div><div>
-        <h3>Optional: connect Claude Code</h3>
-        <p>If you use Claude Pro or Max, this is a strong add-on for coding and deep reasoning inside OpenClaw.</p>
-<pre><button class="copy-btn">Copy</button><code>npm install -g @anthropic-ai/claude-code
-claude setup-token
-
-# Use the token during OpenClaw onboarding/config when prompted</code></pre>
-      </div></div>
-
-      <div class="step"><div class="step-num">5</div><div>
-        <h3>Verify the gateway</h3>
-        <p>After onboarding, confirm the gateway is live on port 18789.</p>
-<pre><button class="copy-btn">Copy</button><code>openclaw gateway --port 18789 --verbose</code></pre>
-      </div></div>
-
-      <div class="step"><div class="step-num">6</div><div>
-        <h3>Install Clawsuite (optional UI)</h3>
-        <p>Clawsuite is the desktop control center. Point it at your Beelink gateway once OpenClaw is running.</p>
-<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code># Download: https://github.com/outsourc-e/clawsuite/releases
-brew install --cask clawsuite
-
-# Settings → Gateway URL → http://localhost:18789
-# Remote over Tailscale → http://&lt;beelink-ip&gt;:18789</code></pre>
-<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># Download the .exe installer from:
-# https://github.com/outsourc-e/clawsuite/releases
-
-# Settings → Gateway URL → http://localhost:18789
-# Remote over Tailscale → http://&lt;beelink-ip&gt;:18789</code></pre>
-      </div></div>
-
-      <div class="step"><div class="step-num">7</div><div>
-        <h3>Send your first message</h3>
-        <p>Once the gateway is up, test the assistant directly from the CLI or through Clawsuite.</p>
-<pre><button class="copy-btn">Copy</button><code>openclaw agent --message "hello, are you running?" --thinking high</code></pre>
-      </div></div>
-    </section>
-
     <!-- OPTIMIZATIONS -->
     <section class="block" id="optimizations">
       <div class="section-eyebrow">Steal my setup</div>
@@ -1038,6 +980,65 @@ local_models:
               <li>OpenClaw pre-installed SSD available</li>
             </ul>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="block" id="proof">
+      <div class="section-eyebrow">Battle-tested</div>
+      <h2 class="section-title">The agent that wrote this setup.</h2>
+      <p class="section-lede">
+        These numbers are from 65 days of real operation — not a mockup. Same agent. Same harness. Same install process you're about to run.
+      </p>
+      <div class="stats-strip">
+        <div class="stat-item"><div class="num">65</div><div class="label">Days operated</div></div>
+        <div class="stat-item"><div class="num">1,215</div><div class="label">Sessions</div></div>
+        <div class="stat-item"><div class="num">33,294</div><div class="label">Tool calls</div></div>
+        <div class="stat-item"><div class="num">142M</div><div class="label">Billable tokens</div></div>
+        <div class="stat-item"><div class="num">3,469</div><div class="label">Commits shipped</div></div>
+      </div>
+    </section>
+    <!-- STACK OVERVIEW -->
+    <section class="block" id="stack">
+      <div class="section-eyebrow">What you're installing</div>
+      <h2 class="section-title">Three layers, one setup.</h2>
+      <p class="section-lede">
+        OpenClaw is the agent runtime. Clawsuite is the visual command center. Beelink is the always-on hardware. Each piece earns its keep.
+      </p>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="icon">🦞</div>
+          <h3>OpenClaw</h3>
+          <p>The runtime that orchestrates everything — model routing, tools, skills, memory, multi-agent spawning.</p>
+          <ul>
+            <li>Route models by task importance</li>
+            <li>Tool registry with 200+ functions</li>
+            <li>Persistent daily + long-term memory</li>
+            <li>Free open-source harness</li>
+          </ul>
+        </div>
+        <div class="stack-card">
+          <div class="icon">🖥️</div>
+          <h3>Clawsuite</h3>
+          <p>The desktop command center. Chat surface, agent management, session history, and one-click deploy.</p>
+          <ul>
+            <li>Electron app, macOS + Windows + Linux</li>
+            <li>Visual inspector for agent runs</li>
+            <li>322★ on GitHub, 30k+ clones</li>
+            <li>Open source, MIT</li>
+          </ul>
+        </div>
+        <div class="stack-card">
+          <div class="icon">⚡</div>
+          <h3>Beelink</h3>
+          <p>The always-on hardware. A Beelink mini PC keeps the agent running 24/7, even when your laptop sleeps.</p>
+          <ul>
+            <li>SER9 Pro 370 / SER10 MAX 470 recommended</li>
+            <li>Runs local models via Ollama + LM Studio</li>
+            <li>Silent, low-power, desk-sized</li>
+            <li>Pre-installed OpenClaw SSD available</li>
+          </ul>
         </div>
       </div>
     </section>
