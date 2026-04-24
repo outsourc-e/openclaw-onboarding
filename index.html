@@ -146,16 +146,17 @@
     }
     .btn-primary:hover { background: #ffd943; color: #000; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(254, 191, 9, 0.3); }
     .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border-bright);
+      background: var(--oc-orange);
+      color: #fff;
+      border: 1px solid var(--oc-orange);
+      box-shadow: 0 4px 16px rgba(249, 115, 22, 0.25);
     }
-    .btn-ghost:hover { border-color: var(--beelink-yellow); color: var(--beelink-yellow); }
+    .btn-ghost:hover { background: #fb923c; border-color: #fb923c; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35); }
 
     /* Hero */
     .hero-bg {
       position: relative;
-      min-height: 640px;
+      min-height: 520px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -185,15 +186,15 @@
       z-index: 2;
       max-width: 900px;
       margin: 0 auto;
-      padding: 100px 24px 80px;
+      padding: 64px 24px 56px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     @media (max-width: 900px) {
-      .hero-bg { min-height: 440px; }
-      .hero { padding: 70px 24px 50px; }
+      .hero-bg { min-height: 360px; }
+      .hero { padding: 48px 24px 40px; }
     }
 
     .hero-eyebrow {
@@ -255,39 +256,6 @@
     .chip strong { color: var(--text); font-weight: 600; }
 
 
-    .hero-proof {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 14px;
-      letter-spacing: 0.02em;
-      margin-top: 6px;
-      padding: 12px 22px;
-      background: rgba(10, 22, 40, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 100px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-    .hero-proof strong {
-      color: var(--text);
-      font-weight: 700;
-      font-feature-settings: 'tnum';
-    }
-    .hero-proof .proof-sep {
-      width: 3px;
-      height: 3px;
-      background: var(--text-muted);
-      opacity: 0.5;
-      border-radius: 50%;
-    }
-    @media (max-width: 640px) {
-      .hero-proof { gap: 12px; font-size: 13px; padding: 10px 18px; }
-      .hero-proof .proof-sep { display: none; }
-    }
     .hero-visual {
       max-width: var(--maxw);
       margin: 40px auto 0;
@@ -599,7 +567,6 @@
     <!-- HERO -->
     <div class="hero-bg">
       <section class="hero">
-        <div class="hero-eyebrow"><span class="dot"></span>65 Days · 1,215 Sessions · Battle-tested</div>
         <h1>
           Steal my AI agent setup.
           <br><span class="grad">Beelink × OpenClaw.</span>
@@ -610,17 +577,6 @@
         <div class="ctas">
           <a class="btn btn-primary" href="#video">▶ Watch the 5-min install</a>
           <a class="btn btn-ghost" href="#install">Jump to commands</a>
-        </div>
-        <div class="hero-proof">
-          <span><strong>65</strong> days</span>
-          <span class="proof-sep"></span>
-          <span><strong>1,215</strong> sessions</span>
-          <span class="proof-sep"></span>
-          <span><strong>33,294</strong> tool calls</span>
-          <span class="proof-sep"></span>
-          <span><strong>142M</strong> tokens</span>
-          <span class="proof-sep"></span>
-          <span><strong>3,469</strong> commits</span>
         </div>
       </section>
     </div>
