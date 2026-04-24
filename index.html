@@ -168,7 +168,7 @@
       background-image: url('assets/brand/beelink-ocplatform-series.jpg');
       background-size: cover;
       background-position: center;
-      opacity: 0.7;
+      opacity: 0.85;
       z-index: 0;
     }
     .hero-bg::after {
@@ -176,8 +176,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at center, rgba(5, 7, 12, 0.2) 0%, rgba(5, 7, 12, 0.7) 60%, var(--bg) 100%),
-        linear-gradient(to bottom, rgba(5, 7, 12, 0.2) 0%, rgba(5, 7, 12, 0.4) 50%, var(--bg) 100%);
+        radial-gradient(ellipse 100% 70% at 50% 40%, rgba(5, 7, 12, 0.15) 0%, rgba(5, 7, 12, 0.55) 55%, rgba(5, 7, 12, 0.85) 85%, var(--bg) 100%),
+        linear-gradient(180deg, transparent 0%, transparent 60%, var(--bg) 100%);
       z-index: 1;
     }
     .hero {
@@ -219,11 +219,12 @@
       box-shadow: 0 0 10px var(--beelink-yellow);
     }
     .hero h1 {
-      font-size: clamp(38px, 5vw, 56px);
+      font-size: clamp(44px, 6vw, 68px);
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 20px;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      margin-bottom: 22px;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.4);
     }
     .hero h1 .grad {
       background: linear-gradient(135deg, var(--beelink-yellow) 0%, var(--oc-orange) 100%);
@@ -253,6 +254,40 @@
     }
     .chip strong { color: var(--text); font-weight: 600; }
 
+
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      margin-top: 6px;
+      padding: 12px 22px;
+      background: rgba(10, 22, 40, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .hero-proof strong {
+      color: var(--text);
+      font-weight: 700;
+      font-feature-settings: 'tnum';
+    }
+    .hero-proof .proof-sep {
+      width: 3px;
+      height: 3px;
+      background: var(--text-muted);
+      opacity: 0.5;
+      border-radius: 50%;
+    }
+    @media (max-width: 640px) {
+      .hero-proof { gap: 12px; font-size: 13px; padding: 10px 18px; }
+      .hero-proof .proof-sep { display: none; }
+    }
     .hero-visual {
       max-width: var(--maxw);
       margin: 40px auto 0;
@@ -490,7 +525,10 @@
     footer .logos { display: flex; justify-content: center; gap: 24px; align-items: center; margin-bottom: 20px; }
     footer .logos img { height: 32px; opacity: 0.7; }
 
-    .video-featured { padding-top: 60px; padding-bottom: 60px; }
+    .video-featured {
+      margin-top: -60px;
+      position: relative;
+      z-index: 3; padding-top: 60px; padding-bottom: 60px; }
 
     @media (max-width: 900px) {
       nav.topnav .wrap {
@@ -561,17 +599,28 @@
     <!-- HERO -->
     <div class="hero-bg">
       <section class="hero">
-        <div class="hero-eyebrow"><span class="dot"></span>Beelink × OpenClaw Hackathon Entry</div>
+        <div class="hero-eyebrow"><span class="dot"></span>65 Days · 1,215 Sessions · Battle-tested</div>
         <h1>
-          The always-on agent setup.
+          Steal my AI agent setup.
           <br><span class="grad">Beelink × OpenClaw.</span>
         </h1>
         <p class="lede">
-          Watch the full install in 5 minutes, then copy-paste the exact commands I use to run a 24/7 AI agent on a Beelink mini PC, plus the routing and model optimizations that make the setup practical day to day.
+          The exact stack I use to run a 24/7 AI agent on a Beelink mini PC. Install in 5 minutes, then copy the routing, memory, and multi-model patterns that make it actually work day to day.
         </p>
         <div class="ctas">
           <a class="btn btn-primary" href="#video">▶ Watch the 5-min install</a>
           <a class="btn btn-ghost" href="#install">Jump to commands</a>
+        </div>
+        <div class="hero-proof">
+          <span><strong>65</strong> days</span>
+          <span class="proof-sep"></span>
+          <span><strong>1,215</strong> sessions</span>
+          <span class="proof-sep"></span>
+          <span><strong>33,294</strong> tool calls</span>
+          <span class="proof-sep"></span>
+          <span><strong>142M</strong> tokens</span>
+          <span class="proof-sep"></span>
+          <span><strong>3,469</strong> commits</span>
         </div>
       </section>
     </div>
