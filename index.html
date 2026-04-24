@@ -1,1595 +1,1082 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-os="mac">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Steal My OpenClaw Setup</title>
-  <meta name="description" content="Beelink × OpenClaw hackathon entry. The always-on agent stack: OpenClaw runtime, Clawsuite UI, and a dedicated Beelink mini PC for 24/7 uptime.">
-  <meta property="og:title" content="Steal My OpenClaw Setup">
-  <meta property="og:description" content="Beelink × OpenClaw hackathon entry. OpenClaw runtime, Clawsuite UI, and a dedicated always-on mini PC setup.">
+  <title>Beelink × OpenClaw — The Always-On Agent Setup</title>
+  <meta name="description" content="The OpenClaw install guide for Beelink mini PCs. Video walkthrough, step-by-step commands, and practical setup optimizations.">
+  <meta property="og:title" content="Beelink × OpenClaw — The Always-On Agent Setup">
+  <meta property="og:description" content="Video install, copy-paste commands, and the optimizations that make it production-grade.">
+  <meta property="og:image" content="assets/brand/beelink-ocplatform-series.jpg">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Steal My OpenClaw Setup">
-  <meta name="twitter:description" content="The always-on agent stack: OpenClaw, Clawsuite, and a Beelink box.">
+  <meta name="twitter:title" content="Beelink × OpenClaw — The Always-On Agent Setup">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --card: #1a1a26;
-      --border: #2a2a3a;
-      --text: #e4e4ed;
-      --text-muted: #8888a0;
-      --accent: #f97316;
-      --accent-dim: #f97316aa;
-      --green: #22c55e;
-      --yellow: #eab308;
+      /* Beelink brand: yellow-amber + deep blue */
+      --beelink-yellow: #febf09;
+      --beelink-yellow-dim: rgba(254, 191, 9, 0.15);
+      --beelink-navy: #0a1628;
+
+      /* OpenClaw: orange */
+      --oc-orange: #f97316;
+      --oc-orange-dim: rgba(249, 115, 22, 0.15);
+
+      /* Surface */
+      --bg: #05070c;
+      --surface: #0c1220;
+      --card: #121a2c;
+      --card-hover: #1a2440;
+      --border: #1f2b45;
+      --border-bright: #2d3a5a;
+
+      /* Text */
+      --text: #e8edf5;
+      --text-muted: #8a96b0;
+      --text-dim: #5c6680;
+
+      /* Semantic */
+      --green: #10b981;
       --red: #ef4444;
-      --blue: #3b82f6;
-      --purple: #a855f7;
-      --radius: 12px;
-      --shadow: 0 12px 30px rgba(0,0,0,0.28);
+
+      --radius: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.25);
+      --shadow-lg: 0 20px 60px rgba(254, 191, 9, 0.1);
+      --maxw: 1120px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.65;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
-
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      background: #0d0d14;
-      border: 1px solid #1f1f2c;
-      border-radius: 6px;
-      padding: 2px 6px;
-      font-size: 12px;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 84px 24px 52px;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
       background:
-        radial-gradient(circle at 15% 0%, rgba(83,199,255,0.16), transparent 26%),
-        radial-gradient(circle at 85% 0%, rgba(109,92,255,0.18), transparent 28%),
-        radial-gradient(circle at top, rgba(249,115,22,0.18), transparent 40%),
-        linear-gradient(180deg, #1a1020 0%, var(--bg) 100%);
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
+        radial-gradient(ellipse at top, rgba(254, 191, 9, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, rgba(249, 115, 22, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(249,115,22,0.15);
-      border: 1px solid rgba(249,115,22,0.35);
-      color: #ffb47a;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      padding: 6px 12px;
-      border-radius: 999px;
-      margin-bottom: 18px;
-    }
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
-      font-weight: 850;
-      letter-spacing: -0.04em;
-      margin-bottom: 14px;
-    }
-    .hero h1 span { color: var(--accent); }
-    .hero p {
-      max-width: 900px;
-      margin: 0 auto;
-      color: var(--text-muted);
-      font-size: 1.08rem;
-    }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
-      gap: 24px;
-      align-items: stretch;
-      max-width: 1120px;
-      margin: 34px auto 0;
-      text-align: left;
-    }
-    .hero-main {
-      background: rgba(18,18,26,0.58);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-    .hero-side {
-      display: grid;
-      gap: 16px;
-    }
-    .hero-card {
-      background: rgba(18,18,26,0.78);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      text-align: left;
-    }
-    .hero-card h3 {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-    .hero-card p { font-size: 15px; margin: 0; }
-    .hero-points {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-    .hero-point {
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(255,255,255,0.03);
-    }
-    .hero-point strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--text);
-      font-size: 14px;
-    }
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-    .hero-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 0.04em;
-    }
-    .hero-action.primary {
-      background: linear-gradient(135deg, var(--accent), #ffb067);
-      color: #111;
-      border-color: transparent;
+    main, nav, footer { position: relative; z-index: 1; }
+
+    a { color: var(--beelink-yellow); text-decoration: none; transition: color 0.15s; }
+    a:hover { color: #ffd943; }
+    code {
+      font-family: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+      background: rgba(254, 191, 9, 0.08);
+      color: var(--beelink-yellow);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      border: 1px solid rgba(254, 191, 9, 0.15);
     }
 
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 12px;
-      max-width: 1040px;
-      margin: 30px auto 0;
+    /* Nav */
+    nav.topnav {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(20px);
+      background: rgba(5, 7, 12, 0.72);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    nav.topnav .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .brand-lockup {
       display: flex;
-      justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin: 22px auto 0;
-      max-width: 980px;
-    }
-    .brand-chip {
-      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(18,18,26,0.78);
-      box-shadow: var(--shadow);
-      color: var(--text);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 800;
-    }
-    .brand-mark {
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      flex: 0 0 auto;
-      overflow: hidden;
-    }
-    .brand-mark.openclaw {
-      background: radial-gradient(circle at 30% 30%, #ffb067, var(--accent));
-      color: #111;
-      font-size: 14px;
-    }
-    .brand-mark.clawsuite {
-      background: linear-gradient(135deg, #6d5cff, #8c7cff 55%, #53c7ff);
-    }
-    .brand-mark.clawsuite::before,
-    .brand-mark.clawsuite::after {
-      content: "";
-      position: absolute;
-      background: rgba(255,255,255,0.96);
-      border-radius: 999px;
-    }
-    .brand-mark.clawsuite::before {
-      width: 16px;
-      height: 6px;
-      transform: rotate(-24deg);
-      top: 7px;
-      left: 5px;
-      box-shadow: 0 8px 0 rgba(255,255,255,0.96);
-    }
-    .brand-mark.clawsuite::after {
-      width: 6px;
-      height: 16px;
-      right: 10px;
-      top: 5px;
-      opacity: 0.92;
-    }
-    .brand-mark.beelink {
-      background: linear-gradient(135deg, #ff8f3a, #ffb067);
-    }
-    .brand-mark.beelink::before,
-    .brand-mark.beelink::after {
-      content: "";
-      position: absolute;
-      background: rgba(17,17,17,0.92);
-      border-radius: 999px;
-    }
-    .brand-mark.beelink::before {
-      width: 6px;
-      height: 6px;
-      left: 7px;
-      top: 7px;
-      box-shadow: 8px 0 0 rgba(17,17,17,0.92), 0 8px 0 rgba(17,17,17,0.92), 8px 8px 0 rgba(17,17,17,0.92);
-    }
-    .brand-mark.beelink::after {
-      width: 12px;
-      height: 2px;
-      bottom: 5px;
-      left: 7px;
-    }
-    .hero-stat {
-      background: rgba(18,18,26,0.8);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 10px;
-      box-shadow: var(--shadow);
-    }
-    .hero-stat strong {
-      display: block;
-      font-size: 1rem;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .hero-stat span {
-      color: var(--text-muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .container {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 0 24px 96px;
-    }
-
-    .os-toggle {
-      display: inline-flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 28px;
-      background: rgba(18,18,26,0.85);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px;
-      box-shadow: var(--shadow);
-    }
-    .os-toggle button {
-      appearance: none;
-      border: 0;
-      background: transparent;
-      color: var(--text-muted);
-      padding: 10px 16px;
-      border-radius: 999px;
-      cursor: pointer;
+      gap: 12px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 15px;
+      letter-spacing: -0.01em;
     }
-    .os-toggle button.active {
-      background: var(--accent);
-      color: #111;
-    }
+    .brand-lockup img { height: 28px; width: auto; }
+    .brand-lockup .x { color: var(--text-dim); font-weight: 400; margin: 0 2px; }
 
-    .progress-bar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: rgba(10,10,15,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-    }
-    .progress-text {
-      display: block;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    nav.topnav .cta-row { display: flex; gap: 8px; align-items: center; }
+    .nav-link {
       color: var(--text-muted);
-      margin-bottom: 8px;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 500;
     }
-    .progress-track {
-      width: 100%;
-      height: 8px;
-      background: #151520;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid #1f1f2b;
-    }
-    .progress-fill {
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), #ffb067);
-      transition: width 0.2s ease;
-    }
+    .nav-link:hover { color: var(--text); background: var(--card); }
 
-    .section-label {
-      display: flex;
+    /* Buttons */
+    .btn {
+      display: inline-flex;
       align-items: center;
-      gap: 14px;
-      margin: 38px 0 18px;
-      position: sticky;
-      top: 58px;
-      z-index: 10;
-      background: linear-gradient(180deg, rgba(10,10,15,0.98), rgba(10,10,15,0.9));
-      padding: 12px 0 8px;
-    }
-    .section-label span {
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
       white-space: nowrap;
     }
-    .section-label hr {
-      width: 100%;
-      border: none;
-      height: 1px;
-      background: var(--border);
+    .btn-primary {
+      background: var(--beelink-yellow);
+      color: #000;
     }
+    .btn-primary:hover { background: #ffd943; color: #000; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(254, 191, 9, 0.3); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-bright);
+    }
+    .btn-ghost:hover { border-color: var(--beelink-yellow); color: var(--beelink-yellow); }
 
-    .step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 0;
-      margin-bottom: 20px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .step.completed {
-      border-color: rgba(34,197,94,0.55);
-      box-shadow: 0 0 0 1px rgba(34,197,94,0.1), var(--shadow);
-    }
-    .step-header {
+    /* Hero */
+    .hero-bg {
+      position: relative;
+      min-height: 640px;
       display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 22px 22px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .step-number {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(249,115,22,0.16);
-      border: 1px solid rgba(249,115,22,0.3);
-      color: var(--accent);
-      font-weight: 900;
-      flex: 0 0 auto;
+      overflow: hidden;
     }
-    .step-title {
-      font-size: 1.12rem;
-      font-weight: 780;
-      letter-spacing: -0.02em;
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/brand/beelink-ocplatform-series.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.7;
+      z-index: 0;
     }
-    .step-time {
-      color: var(--text-muted);
-      font-size: 13px;
-      margin-top: 4px;
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at center, rgba(5, 7, 12, 0.2) 0%, rgba(5, 7, 12, 0.7) 60%, var(--bg) 100%),
+        linear-gradient(to bottom, rgba(5, 7, 12, 0.2) 0%, rgba(5, 7, 12, 0.4) 50%, var(--bg) 100%);
+      z-index: 1;
     }
-    .step-body {
-      padding: 0 22px 22px;
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .step-body p,
-    .step-body li {
-      color: var(--text-muted);
-    }
-    .step-body p + p,
-    .step-body ul,
-    .step-body ol,
-    .step-body .code-block,
-    .step-body .callout,
-    .step-body .file-block,
-    .step-body .provider-grid,
-    .step-body .config-table,
-    .step-body .quote,
-    .step-body .grid-2,
-    .step-body .lessons-list {
-      margin-top: 14px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+    @media (max-width: 900px) {
+      .hero-bg { min-height: 440px; }
+      .hero { padding: 70px 24px 50px; }
     }
 
-    .code-block,
-    .file-block,
-    .quote,
-    .provider-card,
-    .callout,
-    .key-principle {
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--beelink-yellow-dim);
+      border: 1px solid rgba(254, 191, 9, 0.25);
+      color: var(--beelink-yellow);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--beelink-yellow);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--beelink-yellow);
+    }
+    .hero h1 {
+      font-size: clamp(38px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--beelink-yellow) 0%, var(--oc-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p.lede {
+      font-size: 19px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 640px;
+    }
+    .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; justify-content: center; }
+    .hero .chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-    }
-    .code-block { overflow: hidden; }
-    .code-label,
-    .file-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      font-weight: 800;
-    }
-    .code-block pre,
-    .file-content {
-      padding: 16px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      border-radius: 100px;
       font-size: 13px;
-      line-height: 1.6;
-      color: #d6d6e5;
-      background: #101018;
-    }
-    .copy-btn {
-      appearance: none;
-      border: 1px solid rgba(249,115,22,0.35);
-      color: #ffbb88;
-      background: rgba(249,115,22,0.12);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .copy-btn.copied {
-      background: rgba(34,197,94,0.16);
-      border-color: rgba(34,197,94,0.35);
-      color: #86efac;
-    }
-
-    .cmd { color: #f8b36c; }
-    .flag { color: #7dd3fc; }
-    .comment { color: #7d8599; }
-
-    .callout {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px 16px;
-    }
-    .callout-icon {
-      flex: 0 0 auto;
-      font-size: 18px;
-      line-height: 1;
-      margin-top: 1px;
-    }
-    .callout.tip { border-color: rgba(59,130,246,0.35); }
-    .callout.info { border-color: rgba(34,197,94,0.35); }
-    .callout.warn { border-color: rgba(234,179,8,0.35); }
-    .callout.purple { border-color: rgba(168,85,247,0.35); }
-
-    .provider-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .provider-card {
-      padding: 18px;
-      position: relative;
-    }
-    .provider-badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .provider-badge.free { background: rgba(59,130,246,0.15); color: #93c5fd; }
-    .provider-badge.recommended { background: rgba(34,197,94,0.15); color: #86efac; }
-    .provider-badge.private { background: rgba(168,85,247,0.15); color: #d8b4fe; }
-    .provider-card h4 {
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-    .provider-card .price {
-      color: var(--accent);
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-    .provider-card ul {
-      padding-left: 18px;
-    }
-    .provider-card li {
-      margin-bottom: 8px;
       color: var(--text-muted);
-      font-size: 14px;
+    }
+    .chip strong { color: var(--text); font-weight: 600; }
+
+    .hero-visual {
+      max-width: var(--maxw);
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+    .hero-visual-inner {
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--beelink-navy), var(--card));
+      border: 1px solid var(--border-bright);
+      box-shadow: var(--shadow-lg);
+    }
+    .hero-visual-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero-visual-inner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(5, 7, 12, 0.5) 0%, transparent 50%);
+      pointer-events: none;
     }
 
-    .config-table {
-      width: 100%;
-      border-collapse: collapse;
-      border: 1px solid var(--border);
-      border-radius: 14px;
+    /* Sections */
+    section.block {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    @media (max-width: 900px) { section.block { padding: 60px 24px; } }
+
+    .section-eyebrow {
+      display: table;
+      color: var(--beelink-yellow);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 auto 12px;
+      text-align: center;
+    }
+    .section-title {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 auto 16px;
+      text-align: center;
+    }
+    .section-lede {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 48px;
+      text-align: center;
+    }
+
+    /* Video */
+    .video-shell {
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius-lg);
       overflow: hidden;
       background: var(--card);
+      border: 1px solid var(--border-bright);
+      box-shadow: var(--shadow-lg);
     }
-    .config-table th,
-    .config-table td {
-      padding: 12px 14px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-      font-size: 14px;
-    }
-    .config-table th {
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      background: rgba(255,255,255,0.03);
-    }
-    .config-table tr:last-child td { border-bottom: 0; }
-
-    .check-label {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      margin-top: 18px;
-      color: var(--text);
-      font-weight: 700;
-    }
-    .check-label input { display: none; }
-    .checkmark {
-      width: 22px;
-      height: 22px;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      background: #0f0f17;
-      position: relative;
-      flex: 0 0 auto;
-    }
-    .check-label input:checked + .checkmark {
-      background: rgba(34,197,94,0.18);
-      border-color: rgba(34,197,94,0.45);
-    }
-    .check-label input:checked + .checkmark::after {
-      content: '✓';
+    .video-placeholder {
       position: absolute;
       inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #86efac;
-      font-size: 14px;
-      font-weight: 900;
+      gap: 16px;
+      color: var(--text-muted);
+      background: linear-gradient(135deg, var(--beelink-navy), var(--card));
+      background-image:
+        radial-gradient(circle at 30% 20%, rgba(254, 191, 9, 0.15) 0%, transparent 40%),
+        linear-gradient(135deg, var(--beelink-navy), var(--card));
     }
-
-    .quote {
-      padding: 16px 18px;
-      color: var(--text);
-      font-size: 15px;
-      border-left: 3px solid var(--accent);
+    .video-placeholder .play {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: var(--beelink-yellow);
+      display: flex; align-items: center; justify-content: center;
+      color: #000; font-size: 32px;
+      box-shadow: 0 0 40px rgba(254, 191, 9, 0.5);
+      cursor: pointer;
+      transition: transform 0.15s;
     }
-
-    .lessons-list {
-      display: grid;
-      gap: 14px;
-    }
-    .lesson-item {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(168,85,247,0.18);
-      border-radius: 14px;
-      padding: 14px 16px;
-    }
-    .lesson-item strong {
-      display: block;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .key-principle {
-      padding: 18px;
-      border-color: rgba(249,115,22,0.34);
-      margin-top: 18px;
-    }
-    .key-principle strong {
-      display: block;
-      color: var(--accent);
-      margin-bottom: 8px;
+    .video-placeholder .play:hover { transform: scale(1.08); }
+    .video-placeholder .tag {
+      padding: 4px 10px;
+      background: rgba(254, 191, 9, 0.15);
+      border: 1px solid rgba(254, 191, 9, 0.3);
+      border-radius: 100px;
       font-size: 12px;
+      color: var(--beelink-yellow);
+      font-weight: 600;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+    }
+    .video-placeholder h3 {
+      font-size: 22px; color: var(--text); font-weight: 700;
     }
 
-    .image-placeholder {
-      border: 1px dashed rgba(249,115,22,0.35);
-      border-radius: 14px;
-      padding: 26px;
-      text-align: center;
-      color: var(--text-muted);
-      background: rgba(249,115,22,0.04);
-      margin-top: 14px;
-    }
-    .visual-panel {
-      margin-top: 16px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      box-shadow: var(--shadow);
-    }
-    .article-preface {
-      margin: 24px auto 0;
-      max-width: 980px;
-      border: 1px solid rgba(83,199,255,0.16);
-      border-radius: 18px;
-      padding: 16px 18px;
-      background: linear-gradient(135deg, rgba(83,199,255,0.08), rgba(109,92,255,0.06));
-      text-align: left;
-      box-shadow: var(--shadow);
-    }
-    .logo-img {
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
-      border-radius: 999px;
-      flex: 0 0 auto;
-      background: rgba(255,255,255,0.04);
-      padding: 2px;
-    }
-    .screenshot-frame {
-      border-radius: 16px;
-      border: 1px solid #2b2b44;
-      overflow: hidden;
-      background: #0c0f18;
-      box-shadow: var(--shadow);
-    }
-    .screenshot-frame img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-    .judges-panel {
-      margin: 28px 0 6px;
-      border: 1px solid rgba(255,176,103,0.16);
-      border-radius: 24px;
-      overflow: hidden;
-      background: linear-gradient(135deg, rgba(249,115,22,0.09), rgba(109,92,255,0.08) 42%, rgba(83,199,255,0.05));
-      box-shadow: var(--shadow);
-    }
-    .judges-top {
-      padding: 22px 22px 8px;
-    }
-    .judges-top h2 {
-      font-size: clamp(1.4rem, 3vw, 2rem);
-      letter-spacing: -0.03em;
-      margin-bottom: 10px;
-    }
-    .judges-top p { color: var(--text-muted); }
-    .judges-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      padding: 14px 22px 22px;
-    }
-    .judge-card {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(15,15,23,0.62);
-      border-radius: 18px;
-      padding: 16px;
-    }
-    .judge-card strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 8px;
-    }
-    .judge-card span {
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-    .visual-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-    }
-    .visual-title {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-    .visual-body {
-      padding: 18px;
-      display: grid;
-      gap: 14px;
-    }
-    .ui-mock {
-      border-radius: 16px;
-      border: 1px solid #2b2b44;
-      background: linear-gradient(180deg, #101321, #0c0f18 60%);
-      overflow: hidden;
-    }
-    .ui-mock-top {
-      display: grid;
-      grid-template-columns: 220px 1fr 260px;
-      min-height: 220px;
-    }
-    .ui-side,
-    .ui-main,
-    .ui-right {
-      padding: 16px;
-    }
-    .ui-side {
-      background: rgba(122,108,255,0.08);
-      border-right: 1px solid #2b2b44;
-    }
-    .ui-main {
-      background: linear-gradient(180deg, rgba(83,199,255,0.05), transparent 45%);
-      border-right: 1px solid #2b2b44;
-    }
-    .ui-right {
-      background: rgba(255,255,255,0.02);
-    }
-    .ui-pill, .ui-line, .ui-box {
-      border-radius: 10px;
-      background: rgba(255,255,255,0.08);
-    }
-    .ui-pill { height: 12px; margin-bottom: 10px; }
-    .ui-line { height: 10px; margin-bottom: 8px; }
-    .ui-box { height: 74px; margin-top: 12px; }
-    .ui-kpi-row {
+    /* Stack cards */
+    .stack-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 20px;
     }
-    .ui-kpi {
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-    .ui-kpi strong {
-      display: block;
-      color: #fff;
-      margin-bottom: 4px;
-      font-size: 15px;
-    }
-    .hardware-card {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 18px;
-      align-items: center;
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px solid rgba(249,115,22,0.18);
-      background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(255,255,255,0.02));
-    }
-    .mini-pc {
+    @media (max-width: 900px) { .stack-grid { grid-template-columns: 1fr; } }
+    .stack-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all 0.2s;
       position: relative;
-      width: 180px;
-      height: 118px;
-      margin: 0 auto;
-      border-radius: 22px;
-      background: linear-gradient(145deg, #2a2a31, #101015);
-      border: 1px solid #454554;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 18px 40px rgba(0,0,0,0.35);
+      overflow: hidden;
     }
-    .mini-pc::before {
-      content: "";
-      position: absolute;
-      inset: 12px 16px auto 16px;
-      height: 18px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    .stack-card:hover { border-color: var(--beelink-yellow); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stack-card .icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--beelink-yellow-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
     }
-    .mini-pc::after {
-      content: "";
-      position: absolute;
-      width: 58px;
-      height: 8px;
-      bottom: 16px;
-      left: 16px;
-      border-radius: 999px;
-      background: rgba(255,176,103,0.9);
-      box-shadow: 72px 0 0 rgba(255,255,255,0.1);
+    .stack-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
     }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 30px 24px 60px;
-      text-align: center;
+    .stack-card p { color: var(--text-muted); font-size: 15px; line-height: 1.55; margin-bottom: 16px; }
+    .stack-card ul { list-style: none; }
+    .stack-card ul li {
       color: var(--text-muted);
+      font-size: 14px;
+      padding: 4px 0;
+      padding-left: 18px;
+      position: relative;
     }
-    footer p + p { margin-top: 8px; }
-
-    .mac-only, .win-only, .linux-only { display: none !important; }
-    html[data-os="mac"] .mac-only { display: block !important; }
-    html[data-os="win"] .win-only { display: block !important; }
-    html[data-os="linux"] .linux-only { display: block !important; }
-
-    @media (max-width: 920px) {
-      .provider-grid,
-      .hero-stats,
-      .grid-2,
-      .hero-grid,
-      .hero-points,
-      .judges-grid { grid-template-columns: 1fr; }
-      .section-label { position: static; }
-      .hardware-card { grid-template-columns: 1fr; }
+    .stack-card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--beelink-yellow);
     }
 
-    @media (max-width: 640px) {
-      .container, .progress-bar { padding-left: 16px; padding-right: 16px; }
-      .hero { padding-left: 16px; padding-right: 16px; }
-      .step-header, .step-body { padding-left: 16px; padding-right: 16px; }
-      .step-header { align-items: flex-start; }
-      .step-number { width: 38px; height: 38px; }
+    /* Stats strip */
+    .stats-strip {
+      background: linear-gradient(135deg, var(--card), var(--beelink-navy));
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      text-align: center;
+    }
+    @media (max-width: 1000px) { .stats-strip { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px) { .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 28px; } }
+    .stat-item .num {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--beelink-yellow), var(--oc-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    .stat-item .label {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Install steps */
+    .step { display: grid; grid-template-columns: 56px 1fr; gap: 24px; padding: 32px 0; border-bottom: 1px solid var(--border); }
+    .step:last-child { border-bottom: none; }
+    .step-num { width: 44px; height: 44px; border-radius: 10px; background: var(--beelink-yellow); color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; font-family: "JetBrains Mono", monospace; }
+    .step h3 { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .step p { color: var(--text-muted); font-size: 15px; margin-bottom: 16px; max-width: 680px; }
+    pre { background: #0a1020; border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: "JetBrains Mono", monospace; font-size: 14px; line-height: 1.6; color: #e4ebf5; position: relative; }
+    pre code { background: transparent; border: none; color: inherit; padding: 0; font-size: 14px; }
+    pre .cmt { color: var(--text-dim); }
+    pre .kw { color: var(--beelink-yellow); }
+    pre .str { color: #10b981; }
+    .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--card); border: 1px solid var(--border-bright); color: var(--text-muted); padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .copy-btn:hover { color: var(--beelink-yellow); border-color: var(--beelink-yellow); }
+    .os-tabs { display: flex; gap: 4px; background: var(--card); padding: 4px; border-radius: 10px; border: 1px solid var(--border); width: fit-content; margin: 0 auto 32px; }
+    .os-tab { padding: 8px 16px; border-radius: 7px; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: all 0.15s; border: none; background: transparent; font-family: inherit; }
+    .os-tab.active { background: var(--beelink-yellow); color: #000; font-weight: 600; }
+    .os-tab:hover:not(.active) { color: var(--text); }
+
+    /* Optimizations */
+    .opt-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; transition: border-color 0.2s; }
+    .opt-card:hover { border-color: var(--beelink-yellow); }
+    .opt-card .tag { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .tag-free { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-pro { background: var(--beelink-yellow-dim); color: var(--beelink-yellow); border: 1px solid rgba(254, 191, 9, 0.3); }
+    .tag-smart { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
+    .opt-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .opt-card > p { color: var(--text-muted); font-size: 15px; margin-bottom: 16px; }
+
+    /* HW section */
+    .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .hw-grid { grid-template-columns: 1fr; } }
+    .hw-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.2s; }
+    .hw-card:hover { border-color: var(--beelink-yellow); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .hw-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--beelink-navy); }
+    .hw-card .info { padding: 24px; }
+    .hw-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .hw-card .price { font-size: 28px; font-weight: 800; color: var(--beelink-yellow); margin-bottom: 8px; }
+    .hw-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+    .hw-card ul { list-style: none; }
+    .hw-card ul li { color: var(--text-muted); font-size: 13px; padding: 3px 0 3px 16px; position: relative; }
+    .hw-card ul li::before { content: "\2713"; position: absolute; left: 0; color: var(--green); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); padding: 48px 24px; text-align: center; color: var(--text-muted); font-size: 14px; }
+    footer a { color: var(--beelink-yellow); }
+    footer .logos { display: flex; justify-content: center; gap: 24px; align-items: center; margin-bottom: 20px; }
+    footer .logos img { height: 32px; opacity: 0.7; }
+
+    .video-featured { padding-top: 60px; padding-bottom: 60px; }
+
+    @media (max-width: 900px) {
+      nav.topnav .wrap {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+      nav.topnav .cta-row {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .step {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .step-num {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .video-shell-featured {
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border-bright);
+      box-shadow: 0 20px 60px rgba(254, 191, 9, 0.15), 0 0 0 1px rgba(254, 191, 9, 0.2);
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .video-shell-featured .video-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px;
+      background: linear-gradient(135deg, var(--beelink-navy), var(--card));
+      background-image:
+        radial-gradient(circle at 30% 20%, rgba(254, 191, 9, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, rgba(249, 115, 22, 0.15) 0%, transparent 40%),
+        linear-gradient(135deg, var(--beelink-navy), var(--card));
     }
   </style>
 </head>
 <body>
 
-<section class="hero">
-  <div class="hero-badge">⚡ Beelink × OpenClaw Hackathon Entry</div>
-  <h1>Steal My <span>OpenClaw</span> Setup</h1>
-  <p>62 days. 1,215 sessions. 13,607 messages. 33,294 tool calls. 142M tokens. 2,977 commits across 3 repos. Here's exactly how my agent runs, why it belongs on a dedicated Beelink box, and what I'd do differently.</p>
-
-  <div class="hero-grid">
-    <div class="hero-main">
-      <div class="hero-stats">
-        <div class="hero-stat"><strong>1,215</strong><span>Sessions</span></div>
-        <div class="hero-stat"><strong>13,607</strong><span>Messages</span></div>
-        <div class="hero-stat"><strong>33,294</strong><span>Tool Calls</span></div>
-        <div class="hero-stat"><strong>142M</strong><span>Billable Tokens</span></div>
-        <div class="hero-stat"><strong>2,977</strong><span>Commits</span></div>
-        <div class="hero-stat"><strong>62 Days</strong><span>Field Time</span></div>
+  <!-- NAV -->
+  <nav class="topnav">
+    <div class="wrap">
+      <div class="brand-lockup">
+        <img src="assets/brand/logo-400.png" alt="OpenClaw">
+        <span class="x">×</span>
+        <span style="color: var(--beelink-yellow);">Beelink</span>
       </div>
-      <div class="hero-points">
-        <div class="hero-point"><strong>Always-on agent</strong><span>Runs on dedicated hardware instead of dying when the laptop sleeps.</span></div>
-        <div class="hero-point"><strong>Real operator stack</strong><span>OpenClaw runtime, Clawsuite UI, and local models on the same machine.</span></div>
-        <div class="hero-point"><strong>Built under load</strong><span>These numbers come from 62 days of actual usage, not a weekend mockup.</span></div>
-      </div>
-      <div class="hero-actions">
-        <a class="hero-action primary" href="#part-4">Why Beelink wins this setup</a>
-        <a class="hero-action" href="#part-1">See the install path</a>
+      <div class="cta-row">
+        <a class="nav-link" href="#video">Video</a>
+        <a class="nav-link" href="#framework">Framework</a>
+        <a class="nav-link" href="#install">Install</a>
+        <a class="nav-link" href="#optimizations">Optimizations</a>
+        <a class="nav-link" href="#why-beelink">Hardware</a>
+        <a class="btn btn-primary" href="#video">Watch install →</a>
       </div>
     </div>
-    <div class="hero-side">
-      <div class="hero-card">
-        <h3>What judges should notice</h3>
-        <p>This isn't just a landing page. It's a believable 24/7 operator system: agent runtime, visual control UI, and hardware that makes long-lived background work actually viable.</p>
-      </div>
-      <div class="hero-card">
-        <h3>Why this is different</h3>
-        <p>Most hackathon demos are one-shot prompts in a browser. This one is a persistent machine setup with memory, routing, sub-agents, heartbeats, and a UI to run it daily.</p>
-      </div>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <div class="hero-bg">
+      <section class="hero">
+        <div class="hero-eyebrow"><span class="dot"></span>Beelink × OpenClaw Hackathon Entry</div>
+        <h1>
+          The always-on agent setup.
+          <br><span class="grad">Beelink × OpenClaw.</span>
+        </h1>
+        <p class="lede">
+          Watch the full install in 5 minutes, then copy-paste the exact commands I use to run a 24/7 AI agent on a Beelink mini PC, plus the routing and model optimizations that make the setup practical day to day.
+        </p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#video">▶ Watch the 5-min install</a>
+          <a class="btn btn-ghost" href="#install">Jump to commands</a>
+        </div>
+      </section>
     </div>
-  </div>
 
-  <div class="brand-lockup">
-    <div class="brand-chip"><span class="brand-mark openclaw">🦞</span> OpenClaw runtime</div>
-    <div class="brand-chip"><span class="brand-mark clawsuite"></span> Clawsuite UI</div>
-    <div class="brand-chip"><span class="brand-mark beelink"></span> Beelink always-on box</div>
-  </div>
-
-  <div class="os-toggle" id="os-toggle">
-    <button onclick="setOS('mac')" id="os-mac" class="active">macOS</button>
-    <button onclick="setOS('win')" id="os-win">Windows</button>
-    <button onclick="setOS('linux')" id="os-linux">Linux</button>
-  </div>
-
-  <div class="callout purple" style="max-width: 980px; margin: 24px auto 0; text-align: left;">
-    <span class="callout-icon">🏁</span>
-    <div><strong>This page is the Beelink × OpenClaw hackathon build.</strong> The thesis is simple: an always-on mini PC is the right home for a real agent. Better uptime, cheaper power, local model headroom, and no laptop-lid failure mode.</div>
-  </div>
-
-  <div class="article-preface">
-    <strong>Feed this to your agent first.</strong> This article is meant to be agent-agnostic. Drop it into OpenClaw, Claude, Codex, Hermes, or whatever agent you use, then tell it to audit your current setup, steal the useful parts, and improve your memory, routing, heartbeat, and hardware posture without copying things blindly.
-  </div>
-</section>
-
-<div class="progress-bar">
-  <span class="progress-text" id="progress-label">0 / 13</span>
-  <div class="progress-track">
-    <div class="progress-fill" id="progress-fill"></div>
-  </div>
-</div>
-
-<div class="container">
-
-  <section class="judges-panel">
-    <div class="judges-top">
-      <h2>Why this should score well in the hackathon</h2>
-      <p>Beelink gives the agent a permanent home. OpenClaw gives it memory, routing, and background execution. Clawsuite makes it operable. The product story is stronger because the hardware choice changes the workflow, not just the benchmark screenshot.</p>
-    </div>
-    <div class="judges-grid">
-      <div class="judge-card">
-        <strong>1. Hardware actually matters</strong>
-        <span>The Beelink box is not decorative. It solves uptime, thermals, local inference, and long-lived background jobs in one move.</span>
+    <!-- FEATURED VIDEO (right after hero) -->
+    <section class="block video-featured" id="video">
+      <div class="video-shell-featured">
+        <div class="video-placeholder">
+          <span class="tag">Recording soon</span>
+          <div class="play">▶</div>
+          <h3>The 5-minute install</h3>
+          <p style="color: var(--text-dim); font-size: 14px; max-width: 420px; text-align: center;">Beelink unbox → OpenClaw install → first agent response in Clawsuite. Real-time, no edits.</p>
+        </div>
       </div>
-      <div class="judge-card">
-        <strong>2. This is a full stack, not one app</strong>
-        <span>Runtime, UI, memory, sub-agents, routing, and local models all connect into a believable operator workflow.</span>
-      </div>
-      <div class="judge-card">
-        <strong>3. The proof is operational</strong>
-        <span>1,215 sessions, 33,294 tool calls, and 2,977 commits make the story harder to dismiss. This stack has already been used in anger.</span>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <div class="section-label" id="part-1"><span>Part 1 · Install</span><hr></div>
 
-  <div class="step" data-step="1">
-    <div class="step-header">
-      <div class="step-number">1</div>
-      <div>
-        <div class="step-title">Install Node.js 20+ and Git</div>
-        <div class="step-time">5 min</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <p>I keep the base dead simple. OpenClaw only needs a current Node runtime and Git. If those two are right, the rest is mostly config.</p>
-      <div class="code-block">
-        <div class="code-label">Verify versions <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">node</span> <span class="flag">--version</span>
-<span class="cmd">git</span> <span class="flag">--version</span></pre>
-      </div>
-      <div class="code-block mac-only">
-        <div class="code-label">macOS <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-<span class="cmd">nvm</span> install 22
-<span class="cmd">xcode-select</span> <span class="flag">--install</span></pre>
-      </div>
-      <div class="code-block win-only">
-        <div class="code-label">Windows <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">winget</span> install OpenJS.NodeJS.LTS
-<span class="cmd">winget</span> install Git.Git</pre>
-      </div>
-      <div class="code-block linux-only">
-        <div class="code-label">Linux <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="comment"># Ubuntu / Debian</span>
-<span class="cmd">curl</span> -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-<span class="cmd">sudo</span> apt-get install -y nodejs git
-
-<span class="comment"># Or use nvm if you prefer userland installs</span>
-<span class="cmd">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</pre>
-      </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Node.js 20+ and Git are installed</label>
-    </div>
-  </div>
-
-  <div class="step" data-step="2">
-    <div class="step-header">
-      <div class="step-number">2</div>
-      <div>
-        <div class="step-title">Pick your model stack before you install</div>
-        <div class="step-time">5 min</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <p>This is where most people lose the plot. They install the gateway first, then wander around deciding providers. I do the opposite. Pick the cost model up front, then wire OpenClaw around it.</p>
-      <div class="provider-grid">
-        <div class="provider-card">
-          <div class="provider-badge free">Free</div>
-          <h4>OpenRouter free models</h4>
-          <div class="price">$0</div>
+    <!-- STACK OVERVIEW -->
+    <section class="block" id="stack">
+      <div class="section-eyebrow">What you're installing</div>
+      <h2 class="section-title">Three layers, one setup.</h2>
+      <p class="section-lede">
+        OpenClaw is the agent runtime. Clawsuite is the visual command center. Beelink is the always-on hardware. Each piece earns its keep.
+      </p>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="icon">🦞</div>
+          <h3>OpenClaw</h3>
+          <p>The runtime that orchestrates everything — model routing, tools, skills, memory, multi-agent spawning.</p>
           <ul>
-            <li>Best for trying the stack without spending money.</li>
-            <li>Grab one API key from <code>openrouter.ai</code>.</li>
-            <li>Use rotating free models for chat and low-stakes tasks.</li>
-            <li>Tradeoff: rate limits and quality can swing.</li>
+            <li>Route models by task importance</li>
+            <li>Tool registry with 200+ functions</li>
+            <li>Persistent daily + long-term memory</li>
+            <li>Free open-source harness</li>
           </ul>
         </div>
-        <div class="provider-card">
-          <div class="provider-badge recommended">Recommended</div>
-          <h4>$20/mo coding plan</h4>
-          <div class="price">~$20/mo flat</div>
+        <div class="stack-card">
+          <div class="icon">🖥️</div>
+          <h3>Clawsuite</h3>
+          <p>The desktop command center. Chat surface, agent management, session history, and one-click deploy.</p>
           <ul>
-            <li>Best value if you're serious and shipping every day.</li>
-            <li>Use a ChatGPT subscription with Codex access, or run MiniMax for a cheap generalist lane.</li>
-            <li>Add Claude later for higher-stakes reasoning with a standard API key if you need it.</li>
-            <li>Tradeoff: you need at least one paid subscription.</li>
+            <li>Electron app, macOS + Windows + Linux</li>
+            <li>Visual inspector for agent runs</li>
+            <li>322★ on GitHub, 30k+ clones</li>
+            <li>Open source, MIT</li>
           </ul>
         </div>
-        <div class="provider-card">
-          <div class="provider-badge private">Private</div>
-          <h4>Local Ollama</h4>
-          <div class="price">$0 after hardware</div>
+        <div class="stack-card">
+          <div class="icon">⚡</div>
+          <h3>Beelink</h3>
+          <p>The always-on hardware. A Beelink mini PC keeps the agent running 24/7, even when your laptop sleeps.</p>
           <ul>
-            <li>Best for privacy, offline work, and no API usage anxiety.</li>
-            <li>Install Ollama and pull <code>qwen3:8b</code> or <code>qwen3.5:9b</code>.</li>
-            <li>Great on a dedicated box or secondary machine.</li>
-            <li>Tradeoff: you need hardware, and the reasoning ceiling is lower.</li>
+            <li>SER9 Pro 370 / SER10 MAX 470 recommended</li>
+            <li>Runs local models via Ollama + LM Studio</li>
+            <li>Silent, low-power, desk-sized</li>
+            <li>Pre-installed OpenClaw SSD available</li>
           </ul>
         </div>
       </div>
+    </section>
 
-      <table class="config-table">
-        <tr><th>Path</th><th>What I use it for</th><th>Why</th></tr>
-        <tr><td>OpenRouter</td><td>Experiments, fallback models</td><td>One key, broad routing surface</td></tr>
-        <tr><td>Codex / MiniMax</td><td>Coding lane</td><td>Best price-to-output ratio</td></tr>
-        <tr><td>Claude</td><td>Oracle lane</td><td>Critique, architecture, high-stakes review</td></tr>
-        <tr><td>Ollama</td><td>Local helper</td><td>Cheap background tasks, private workflows</td></tr>
-      </table>
+    <!-- STATS STRIP -->
+    <section class="block" id="proof">
+      <div class="section-eyebrow">Battle-tested</div>
+      <h2 class="section-title">The agent that wrote this setup.</h2>
+      <p class="section-lede">
+        These numbers are from 65 days of real operation — not a mockup. Same agent. Same harness. Same install process you're about to run.
+      </p>
+      <div class="stats-strip">
+        <div class="stat-item"><div class="num">65</div><div class="label">Days operated</div></div>
+        <div class="stat-item"><div class="num">1,215</div><div class="label">Sessions</div></div>
+        <div class="stat-item"><div class="num">33,294</div><div class="label">Tool calls</div></div>
+        <div class="stat-item"><div class="num">142M</div><div class="label">Billable tokens</div></div>
+        <div class="stat-item"><div class="num">3,469</div><div class="label">Commits shipped</div></div>
+      </div>
+    </section>
+    <!-- THE FRAMEWORK -->
+    <section class="block" id="framework">
+      <div class="section-eyebrow">Steal my framework</div>
+      <h2 class="section-title">Five files run the whole setup.</h2>
+      <p class="section-lede">
+        The agent wakes up fresh every session. These files <em>are</em> the continuity. Every response reads them, every session updates them. That's why 1,215 sessions in, the voice is consistent and the work compounds.
+      </p>
 
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>I picked a cost model before touching config</label>
-    </div>
-  </div>
+      <div class="opt-card">
+        <span class="tag tag-smart">SOUL.md</span>
+        <h3>Who the agent is.</h3>
+        <p>Personality, voice, values, red lines. This is what kills the "Great question!" sycophant tone and replaces it with a collaborator who has opinions.</p>
+<pre><button class="copy-btn">Copy</button><code># SOUL.md
+- Be genuinely helpful, not performatively helpful.
+- Have opinions. Push back when wrong.
+- Try before asking — come back with answers, not questions.
+- Private things stay private.
+- Be the assistant you'd actually want to talk to.</code></pre>
+      </div>
 
-  <div class="step" data-step="3">
-    <div class="step-header">
-      <div class="step-number">3</div>
-      <div>
-        <div class="step-title">Install OpenClaw</div>
-        <div class="step-time">2 min</div>
+      <div class="opt-card">
+        <span class="tag tag-smart">USER.md</span>
+        <h3>Who you are.</h3>
+        <p>What you build, how you work, your stack, your preferences. Stops the agent from explaining things you already know and lets it pattern-match to your taste.</p>
+<pre><button class="copy-btn">Copy</button><code># USER.md
+Name: Eric
+Timezone: EST
+Stack: Node / pnpm / Python / Supabase / Stripe
+Vibe: Direct, concise, actionable — no hand-holding.
+Skip: over-explaining obvious things, fluff, safety lectures.</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p>Install the CLI globally. This is the runtime, the gateway, the messaging surface, the skills loader, and the thing that keeps the whole stack stitched together.</p>
-      <div class="code-block">
-        <div class="code-label">Install <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> openclaw</pre>
-      </div>
-      <div class="code-block win-only">
-        <div class="code-label">Windows fallback <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">npm</span> install <span class="flag">-g</span> openclaw --ignore-scripts</pre>
-      </div>
-      <div class="code-block">
-        <div class="code-label">Verify <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span> <span class="flag">--version</span></pre>
-      </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>OpenClaw is installed globally</label>
-    </div>
-  </div>
 
-  <div class="step" data-step="4">
-    <div class="step-header">
-      <div class="step-number">4</div>
-      <div>
-        <div class="step-title">Run it once and let the wizard scaffold the workspace</div>
-        <div class="step-time">3 min</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <p>Use the actual setup command here, not a vague first launch. The current CLI has a dedicated setup flow that initializes config and the agent workspace.</p>
-      <div class="code-block">
-        <div class="code-label">Interactive setup <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span> setup <span class="flag">--wizard</span></pre>
-      </div>
-      <div class="grid-2">
-        <div class="callout info mac-only"><span class="callout-icon">📁</span><div><strong>macOS workspace</strong><br><code>~/.openclaw/workspace/</code></div></div>
-        <div class="callout info win-only"><span class="callout-icon">📁</span><div><strong>Windows workspace</strong><br><code>C:\Users\YOU\.openclaw\workspace\</code></div></div>
-        <div class="callout info linux-only"><span class="callout-icon">📁</span><div><strong>Linux workspace</strong><br><code>~/.openclaw/workspace/</code></div></div>
-        <div class="callout tip"><span class="callout-icon">🧠</span><div><strong>Think of the workspace as the agent's brain on disk.</strong> If it's not written there, it doesn't survive restarts.</div></div>
-      </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The workspace is scaffolded and readable</label>
-    </div>
-  </div>
+      <div class="opt-card">
+        <span class="tag tag-smart">AGENTS.md</span>
+        <h3>How the agent operates.</h3>
+        <p>The behavioral rails. Execution modes, tool discipline, anti-patterns banned. The longest file, and the one that does the most work per byte.</p>
+<pre><button class="copy-btn">Copy</button><code># AGENTS.md — core rails
+BUILD MODE (default shipping):
+  • Max 2 sentences before first tool call.
+  • Chain tool calls until verified-done or blocked.
+  • Never "next turn I'll…" when the call works now.
+  • Partial progress ≠ done.
 
-  <div class="step" data-step="5">
-    <div class="step-header">
-      <div class="step-number">5</div>
-      <div>
-        <div class="step-title">Configure the provider lane you chose</div>
-        <div class="step-time">5 min</div>
+STRATEGY MODE (architecture, review, prioritization):
+  • Tables + tradeoffs allowed.
+  • Switch back to Build the moment a step exists.
+
+TOOL DISCIPLINE
+  • Two discovery passes max. Then edit or name the blocker.
+  • Known target beats more discovery.
+  • Tool Churn Kill-Switch: if two rounds changed no artifact,
+    switch to direct edit or state the blocker.
+
+BANNED
+  ❌ "Great question!"
+  ❌ Listing 5 options without recommending one.
+  ❌ Explaining what you're about to do instead of doing it.
+  ❌ Summarizing what you just did after doing it.
+  ❌ Asking permission for things safely tried.</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p>I don't cram every provider in on day one. I wire one working lane, verify it, then add the second and third lanes after the system is stable. The current interactive command for this is <code>openclaw configure</code>.</p>
-      <div class="code-block">
-        <div class="code-label">Interactive configure flow <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span> configure <span class="flag">--section</span> model <span class="flag">--section</span> gateway</pre>
+
+      <div class="opt-card">
+        <span class="tag tag-smart">WORK_MODE.md</span>
+        <h3>Today's tempo.</h3>
+        <p>Are we shipping? Strategizing? Recovering? This file tone-matches the agent to the day without you having to say it every turn.</p>
+<pre><button class="copy-btn">Copy</button><code># WORK_MODE.md
+Mode: Build (shipping Beelink article tonight, deadline Friday).
+Tone: Terse, executable, high-output.
+Skip: long-form explanations, optional commentary.
+Escalate: any blocker that costs >30 minutes to resolve alone.</code></pre>
       </div>
-      <div class="file-block">
-        <div class="file-header">Provider playbook</div>
-        <div class="file-content">FREE lane
-- Generate one OpenRouter key
-- Set a free model as your default chat lane
-- Add a paid fallback later when you hit rate limits
 
-$20/mo coding lane
-- Log into your coding plan first
-- Route coding work to GPT-5.4 Codex or MiniMax
-- Add Claude later with a standard API key if you want a separate oracle lane
+      <div class="opt-card">
+        <span class="tag tag-free">Daily memory</span>
+        <h3>memory/YYYY-MM-DD.md</h3>
+        <p>Raw logs of what happened each day. Decisions, context, things to remember. Written as you go. The primary continuity source — reloaded at the start of every session.</p>
+<pre><button class="copy-btn">Copy</button><code># memory/2026-04-23.md
+## Shipped
+- PR #133 security hardening merged (closes #121-#125)
+- PC1 qwen3.6:27b pulled, Flash Attention enabled
+- Bench-loop baseline: 25 tok/s → 43 tok/s with flash attn
 
-PRIVATE lane
-- Install Ollama
-- Pull qwen3:8b or qwen3.5:9b
-- Point OpenClaw at the local Ollama host</div>
+## Open
+- PR #132 needs server-side gating before merge
+- Beelink article: Part 3 draft tonight
+
+## Lesson
+- SSH Start-Process on Windows detaches badly.
+  Use scheduled tasks or tray app for persistence.</code></pre>
       </div>
-      <div class="code-block linux-only">
-        <div class="code-label">Local Ollama bootstrap <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">curl</span> -fsSL https://ollama.com/install.sh | sh
-<span class="cmd">ollama</span> pull qwen3:8b</pre>
+
+      <div class="opt-card">
+        <span class="tag tag-pro">Long-term</span>
+        <h3>MEMORY.md</h3>
+        <p>Curated long-term memory. Main session only — never loaded in group chats, Discord, or shared contexts. Distilled wisdom, not raw logs. Updated during heartbeat polls.</p>
+<pre><button class="copy-btn">Copy</button><code># MEMORY.md — curated
+## Current Projects
+- Clawsuite v2, Hermes-Workspace, BenchLoop, OCPlatform
+- Discord community launched April 14
+- Creator-economy ops
+
+## Principles
+- Speed, clarity, leverage
+- Execution over theory
+- Numbers over vibes
+
+## Sensitive
+- API keys + personal context stay out of shared sessions</code></pre>
       </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>One provider lane is configured and ready</label>
-    </div>
-  </div>
+    </section>
 
-  <div class="step" data-step="6">
-    <div class="step-header">
-      <div class="step-number">6</div>
-      <div>
-        <div class="step-title">Start the gateway and make sure it stays up</div>
-        <div class="step-time">2 min</div>
+    <!-- THE ORACLE & DISPATCH -->
+    <section class="block" id="oracle">
+      <div class="section-eyebrow">Multi-model orchestration</div>
+      <h2 class="section-title">One agent isn't enough. Use the stack.</h2>
+      <p class="section-lede">
+        The main agent is fast and cheap — handles 90% of turns. For high-stakes work, it spawns a second, stronger agent as a reasoning oracle. Money decisions, public drafts, architecture calls — they all get the oracle pass.
+      </p>
+
+      <div class="opt-card">
+        <span class="tag tag-smart">Reasoning Oracle</span>
+        <h3>Dispatch a stronger model for high-stakes turns.</h3>
+        <p>The main agent is your workhorse. The oracle is your senior reviewer. Spawn the oracle only when the cost of being wrong is high.</p>
+<pre><button class="copy-btn">Copy</button><code># AGENTS.md — Reasoning Oracle pattern
+MAIN = fast/cheap model (e.g. GPT-5.5 Codex, Gemini Flash)
+ORACLE = stronger reasoning model (e.g. Claude Opus, GPT-5 Pro)
+
+Call the oracle when:
+  • money decisions (trade sizing, live approvals)
+  • public drafts (final X post, article, announcement)
+  • architecture decisions (system design, schema, API)
+  • post-task audits (review what you just shipped)
+
+Pattern:
+  1. Main agent drafts.
+  2. Oracle critiques.
+  3. Main revises once.
+  4. Ship.</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p>This is the point where it stops being a CLI and starts being infrastructure. If the gateway is healthy, the rest of the stack becomes composable.</p>
-      <div class="code-block">
-        <div class="code-label">Start + check <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">openclaw</span> gateway start
-<span class="cmd">openclaw</span> gateway status
-<span class="cmd">openclaw</span> gateway health</pre>
+
+      <div class="opt-card">
+        <span class="tag tag-smart">Task Dispatch</span>
+        <h3>Spawn sub-agents with injected context.</h3>
+        <p>When you delegate to a sub-agent, inject 5 things: project state, today's context, output rules, voice, and one 10/10 example. This is the difference between a 6.5 output and a 9.5 output.</p>
+<pre><button class="copy-btn">Copy</button><code># Task dispatch prompt template
+CONTEXT
+  - What exists, what stack, what repos
+  - What was just built, recent decisions
+OUTPUT RULES
+  - Tables for tradeoffs, word budget, opinion required
+VOICE
+  - "Senior engineer" not "helpful assistant"
+  - Pragmatic, direct, opinionated
+DOMAIN
+  - The specific mechanics of the problem space
+EXAMPLE
+  - One compact reference of excellent output
+
+The agent runs the task. Comes back with a result,
+not a question.</code></pre>
       </div>
-      <div class="callout warn"><span class="callout-icon">⚠️</span><div><strong>Don't keep reinstalling when you hit a config issue.</strong> If the gateway is booting, your problem is almost always routing, auth, or a bad field in config, not the install itself.</div></div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The gateway is running and `openclaw gateway status` looks healthy</label>
-    </div>
-  </div>
 
-  <div class="section-label"><span>Part 2 · Personalize</span><hr></div>
+      <div class="opt-card">
+        <span class="tag tag-smart">Heartbeats</span>
+        <h3>Batch periodic checks into one call.</h3>
+        <p>Heartbeats run every ~30 min: check email, calendar, mentions, weather. One cheap-model call replaces six cron jobs. Memory curation happens here too.</p>
+<pre><button class="copy-btn">Copy</button><code># HB_SIGNAL.md — what to check each heartbeat
+1. Emails — anything urgent?
+2. Calendar — next 2h?
+3. Mentions — X / Discord / GitHub?
+4. Memory — curate recent days into MEMORY.md?
 
-  <div class="step" data-step="7">
-    <div class="step-header">
-      <div class="step-number">7</div>
-      <div>
-        <div class="step-title">Write AGENTS.md like an operator, not like a prompt engineer</div>
-        <div class="step-time">8 min</div>
+# Stay quiet when:
+# - late night (23:00-08:00) unless urgent
+# - nothing new since last check
+# - human is clearly busy
+
+# Reply format: one-line alert OR "HB_ACK"</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p><code>AGENTS.md</code> is the operating manual. Mine is blunt. It says what matters, what never leaks, when to ask first, and how to use memory instead of pretending the model will remember.</p>
-      <div class="file-block">
-        <div class="file-header">~/.openclaw/workspace/AGENTS.md</div>
-        <div class="file-content">## Session Startup
-1. Read SOUL.md
-2. Read USER.md
-3. Read today's memory file
-4. If in main session, also read MEMORY.md
+    </section>
+    <!-- INSTALL STEPS -->
+    <section class="block" id="install">
+      <div class="section-eyebrow">Copy. Paste. Done.</div>
+      <h2 class="section-title">The install, step by step.</h2>
+      <p class="section-lede">Based on the current OpenClaw onboarding flow: install the CLI, run onboard, connect your model, then point Clawsuite at the gateway.</p>
 
-## Red Lines
-- Don't exfiltrate private data
-- Ask before external actions
-- trash > rm
-
-## Memory
-- If you want to remember something, write it to a file
-- MEMORY.md = curated long-term memory
-- memory/YYYY-MM-DD.md = daily log
-
-## Heartbeats vs Cron
-- Heartbeat = batched flexible checks
-- Cron = exact timing and isolated tasks</div>
+      <div class="os-tabs">
+        <button class="os-tab active" data-os="mac">macOS / Linux</button>
+        <button class="os-tab" data-os="win">Windows</button>
       </div>
-      <div class="callout info"><span class="callout-icon">🧭</span><div><strong>The job of AGENTS.md is to remove ambiguity.</strong> Startup sequence, memory rules, red lines, heartbeat posture, when to ask first. The better this file is, the less the model improvises nonsense.</div></div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>AGENTS.md has clear rules, boundaries, and startup steps</label>
-    </div>
-  </div>
 
-  <div class="step" data-step="8">
-    <div class="step-header">
-      <div class="step-number">8</div>
-      <div>
-        <div class="step-title">Define identity with SOUL.md and USER.md</div>
-        <div class="step-time">8 min</div>
+      <div class="step"><div class="step-num">1</div><div>
+        <h3>Install Node.js and Git</h3>
+        <p>OpenClaw recommends Node 24, or Node 22.16+ at minimum.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code># Install Node via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+nvm install 24
+
+# Git via Xcode Command Line Tools (macOS)
+xcode-select --install
+
+# Verify
+node --version
+git --version</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># Using winget (built into Windows 11)
+winget install OpenJS.NodeJS.LTS
+winget install Git.Git
+
+# Or download installers manually:
+# Node: https://nodejs.org
+# Git:  https://git-scm.com
+
+# Verify in a new PowerShell window
+node --version
+git --version</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">2</div><div>
+        <h3>Install OpenClaw</h3>
+        <p>Use the published npm package. This is the current recommended install path.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code>npm install -g openclaw@latest
+
+# Verify
+openclaw --version</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># If PowerShell blocks install scripts, use --ignore-scripts first
+npm install -g openclaw@latest --ignore-scripts
+
+# Verify
+openclaw --version</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">3</div><div>
+        <h3>Run onboarding</h3>
+        <p>This is the current first-run flow. It installs the daemon and walks you through provider/auth setup.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code>openclaw onboard --install-daemon</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code>openclaw onboard --install-daemon
+
+# If execution is blocked, run once in PowerShell:
+# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">4</div><div>
+        <h3>Optional: connect Claude Code</h3>
+        <p>If you use Claude Pro or Max, this is a strong add-on for coding and deep reasoning inside OpenClaw.</p>
+<pre><button class="copy-btn">Copy</button><code>npm install -g @anthropic-ai/claude-code
+claude setup-token
+
+# Use the token during OpenClaw onboarding/config when prompted</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">5</div><div>
+        <h3>Verify the gateway</h3>
+        <p>After onboarding, confirm the gateway is live on port 18789.</p>
+<pre><button class="copy-btn">Copy</button><code>openclaw gateway --port 18789 --verbose</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">6</div><div>
+        <h3>Install Clawsuite (optional UI)</h3>
+        <p>Clawsuite is the desktop control center. Point it at your Beelink gateway once OpenClaw is running.</p>
+<pre class="os-mac" data-os="mac"><button class="copy-btn">Copy</button><code># Download: https://github.com/outsourc-e/clawsuite/releases
+brew install --cask clawsuite
+
+# Settings → Gateway URL → http://localhost:18789
+# Remote over Tailscale → http://&lt;beelink-ip&gt;:18789</code></pre>
+<pre class="os-win" data-os="win" hidden><button class="copy-btn">Copy</button><code># Download the .exe installer from:
+# https://github.com/outsourc-e/clawsuite/releases
+
+# Settings → Gateway URL → http://localhost:18789
+# Remote over Tailscale → http://&lt;beelink-ip&gt;:18789</code></pre>
+      </div></div>
+
+      <div class="step"><div class="step-num">7</div><div>
+        <h3>Send your first message</h3>
+        <p>Once the gateway is up, test the assistant directly from the CLI or through Clawsuite.</p>
+<pre><button class="copy-btn">Copy</button><code>openclaw agent --message "hello, are you running?" --thinking high</code></pre>
+      </div></div>
+    </section>
+
+    <!-- OPTIMIZATIONS -->
+    <section class="block" id="optimizations">
+      <div class="section-eyebrow">Steal my setup</div>
+      <h2 class="section-title">The optimizations that make the setup cheaper and more resilient.</h2>
+      <p class="section-lede">These are the exact patterns I run. Copy them, tweak what you want, skip what you don't need.</p>
+
+      <div class="opt-card">
+        <span class="tag tag-free">Free</span>
+        <h3>Free brain via OpenRouter</h3>
+        <p>OpenRouter gives access to free-tier models. Good enough for hb_signals, background checks, and casual chat.</p>
+<pre><button class="copy-btn">Copy</button><code># Set default model in OpenClaw config:
+model: openrouter/google/gemini-2.5-flash-lite:free
+
+# Free fallback chain:
+fallbacks:
+  - openrouter/meta-llama/llama-4-scout:free
+  - openrouter/qwen/qwen3-32b:free</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p>This is where most agents feel fake. They're told to be "helpful" instead of being somebody. <code>SOUL.md</code> gives the agent a voice. <code>USER.md</code> tells it who it's working for and what "helpful" actually means in context.</p>
-      <div class="grid-2">
-        <div class="file-block">
-          <div class="file-header">SOUL.md</div>
-          <div class="file-content">Be genuinely helpful, not performatively helpful.
-Have opinions.
-Be resourceful before asking.
-Earn trust through competence.
-Remember you're a guest in someone's life.
-Speak to Eric like a competent founder who values speed, clarity, and leverage.</div>
-        </div>
-        <div class="file-block">
-          <div class="file-header">USER.md</div>
-          <div class="file-content">Name: Eric
-Timezone: America/New_York
-What he values: speed, clarity, leverage
-Skip: fluff, over-explaining, AI marketing talk
-Stack: GitHub, Node.js, Python, Stripe, Supabase, Discord, Telegram
-What he wants: systems thinking, leverage, shipped output</div>
-        </div>
+
+      <div class="opt-card">
+        <span class="tag tag-pro">$20/mo</span>
+        <h3>ChatGPT Plus / Codex OAuth</h3>
+        <p>If you have a ChatGPT Plus or Pro subscription, the Codex CLI OAuth flow can be a useful way to access stronger OpenAI models without maintaining a separate API key for every task.</p>
+<pre><button class="copy-btn">Copy</button><code># Install Codex CLI
+npm install -g @openai/codex
+
+# Login with your ChatGPT Plus account
+codex login
+
+# OpenClaw can route through Codex OAuth
+# Check your own subscription and access limits before relying on this path</code></pre>
       </div>
-      <div class="quote">A useful agent needs both identity and audience. SOUL.md answers "who am I?" USER.md answers "who am I serving and what do they actually care about?"</div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The agent has a defined voice and a real user profile</label>
-    </div>
-  </div>
 
-  <div class="step" data-step="9">
-    <div class="step-header">
-      <div class="step-number">9</div>
-      <div>
-        <div class="step-title">Seed MEMORY.md on day 1</div>
-        <div class="step-time">6 min</div>
+      <div class="opt-card">
+        <span class="tag tag-smart">Smart routing</span>
+        <h3>Route hb_signals to cheap models</h3>
+        <p>Heartbeat polls check inbox, calendar, and notifications on a schedule. They usually do not need your most expensive model, so routing them to a cheaper model keeps idle spend under control.</p>
+<pre><button class="copy-btn">Copy</button><code># hb_signal uses cheap model:
+hb_signal_model: openrouter/google/gemini-2.5-flash-lite:free
+
+# Main chat stays on premium:
+default_model: anthropic/claude-opus-4-6</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p>Don't wait for the model to magically accumulate context. Seed the memory you know you'll need every week: repos, devices, current priorities, naming conventions, and the user's preferences.</p>
-      <div class="file-block">
-        <div class="file-header">MEMORY.md starter</div>
-        <div class="file-content">## Current Projects
-- OpenClaw
-- Clawsuite
-- Hermes-Workspace
-- BenchLoop
 
-## Infrastructure
-- Main machine: MacBook Pro
-- PC2 local model box: RTX 3070
-- Tailscale enabled
+      <div class="opt-card">
+        <span class="tag tag-smart">Day 1 hack</span>
+        <h3>Export your SOUL from ChatGPT</h3>
+        <p>Already have months of ChatGPT history? Export your personality and context so the new agent isn't starting from scratch.</p>
+<pre><button class="copy-btn">Copy</button><code># 1. ChatGPT Settings -> Data Controls -> Export
+# 2. Download conversations.json
+# 3. Ask ChatGPT:
+#    "Summarize my personality, preferences, projects,
+#     and communication style as a SOUL.md file"
+# 4. Paste into ~/.openclaw/workspace/SOUL.md
 
-## Preferences
-- Be direct
-- Skip fluff
-- Write things down instead of pretending to remember
-
-## Naming
-- OpenClaw, not OCPlatform
-- Clawsuite, not ClawSuite</div>
+# Same for MEMORY.md:
+#    "List every project, decision, and lesson
+#     you remember from our conversations"</code></pre>
       </div>
-      <div class="callout info"><span class="callout-icon">📌</span><div><strong>Keep MEMORY.md curated.</strong> I treat it like working memory, not a dumping ground. The daily notes are where the raw volume goes.</div></div>
-      <div class="callout purple"><span class="callout-icon">🧠</span><div><strong>Memory architecture is the unlock:</strong> <code>MEMORY.md</code> for durable context, daily files for raw logs, heartbeat cleanup for maintenance. This is what makes the agent compound instead of reset emotionally and operationally every session.</div></div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>MEMORY.md contains the day-1 context the agent actually needs</label>
-    </div>
-  </div>
 
-  <div class="section-label"><span>Part 3 · Steal My Setup</span><hr></div>
+      <div class="opt-card">
+        <span class="tag tag-free">Free</span>
+        <h3>Local Ollama fallback</h3>
+        <p>Run Qwen 3.5 or Llama 4 Scout locally on your Beelink for offline tasks.</p>
+<pre><button class="copy-btn">Copy</button><code># Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
 
-  <div class="step" data-step="10">
-    <div class="step-header">
-      <div class="step-number">10</div>
-      <div>
-        <div class="step-title">Use heartbeats for background checks without becoming annoying</div>
-        <div class="step-time">10 min</div>
+# Pull a model
+ollama pull qwen3.5:latest
+
+# Add to OpenClaw as fallback
+local_models:
+  endpoint: http://localhost:11434
+  models:
+    - qwen3.5:latest</code></pre>
       </div>
-    </div>
-    <div class="step-body">
-      <p>This is one of the big unlocks. I don't want a cron explosion for every little thing. I want a heartbeat loop that batches cheap checks, rotates through them, and only interrupts me when there's actually signal.</p>
-      <div class="file-block">
-        <div class="file-header">~/.openclaw/workspace/HEARTBEAT.md</div>
-        <div class="file-content">## Active Checks
-- Rotate: email, calendar, weather, mentions
-- Quiet hours: 23:00-08:00
-- If nothing needs attention, stay quiet
-- If something matters, alert once with the useful detail
+    </section>
 
-## Background Work
-- Review recent memory files
-- Update MEMORY.md if the pattern is durable
-- Check project repos for obvious drift</div>
-      </div>
-      <div class="file-block">
-        <div class="file-header">HB_SIGNAL.md</div>
-        <div class="file-content"># HB_SIGNAL.md
-
-- Morning pass: weather + calendar
-- Midday pass: mentions + urgent inbox
-- Late afternoon pass: project drift, open PRs, notifications
-- Evening pass: upcoming meetings, inbox, memory cleanup
-
-Rule: be proactive without being annoying.
-If there is no real delta, do not send a message.</div>
-      </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Heartbeat rules are written and the checks rotate on purpose</label>
-    </div>
-  </div>
-
-  <div class="step" data-step="11">
-    <div class="step-header">
-      <div class="step-number">11</div>
-      <div>
-        <div class="step-title">Route by importance and cut costs by 70%+</div>
-        <div class="step-time">12 min</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <p>The expensive mistake is using the same premium model for everything. I route by task shape. Cheap checks go to cheap models. High-stakes thinking gets the premium lane. That's how I got real output without lighting money on fire.</p>
-      <table class="config-table">
-        <tr><th>Lane</th><th>Model</th><th>Why it belongs there</th></tr>
-        <tr><td>Heartbeats</td><td>Gemini Flash</td><td>Nearly free, fast, good enough for lightweight checks</td></tr>
-        <tr><td>Main chat</td><td>Claude Sonnet</td><td>Reliable balance of speed, quality, and tone</td></tr>
-        <tr><td>Coding</td><td>GPT-5.4 Codex or MiniMax</td><td>Best value for implementation throughput</td></tr>
-        <tr><td>Heavy reasoning</td><td>Claude Opus</td><td>Oracle pattern for money, architecture, and public output</td></tr>
-        <tr><td>Sub-agents</td><td>Delegated lane</td><td>Long tasks run in the background while the parent stays responsive</td></tr>
-      </table>
-      <div class="quote">2026-02-18 → 2026-04-21: 1,215 sessions, 13,607 messages, 33,294 tool calls, 142M billable tokens, 2,977 commits across Clawsuite, Hermes-Workspace, and BenchLoop. The routing is not theory. It held up under volume.</div>
-      <div class="callout tip"><span class="callout-icon">💸</span><div><strong>Cost routing is a product feature.</strong> You do not win by always picking the smartest model. You win by matching model quality to task importance and reserving premium reasoning for moments that actually justify it.</div></div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Model routing is explicit and tied to cost, not vibes</label>
-    </div>
-  </div>
-
-  <div class="step" style="border-color: rgba(168,85,247,0.55);">
-    <div class="step-header">
-      <div class="step-number" style="background: rgba(168,85,247,0.16); border-color: rgba(168,85,247,0.3); color: #d8b4fe;">★</div>
-      <div>
-        <div class="step-title">Steal My Setup, the six rules that actually matter</div>
-        <div class="step-time">What I'd keep if you deleted everything else</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <div class="lessons-list">
-        <div class="lesson-item"><strong>1. Keep MEMORY.md under 80 lines.</strong><span>Raw notes belong in <code>memory/YYYY-MM-DD.md</code>. MEMORY is curated wisdom. The daily file is the journal.</span></div>
-        <div class="lesson-item"><strong>2. Write, don't mental-note.</strong><span>Agents restart. Context compacts. If a lesson matters, write it to disk or it's gone.</span></div>
-        <div class="lesson-item"><strong>3. Use the oracle pattern.</strong><span>When the stakes are money, public posts, or architecture, spawn Claude Opus as a critique pass before you ship.</span></div>
-        <div class="lesson-item"><strong>4. HB_SIGNAL beats cron for batched checks.</strong><span>Use cron when exact timing matters. Use heartbeat loops when you want rotating checks that can drift a little and stay cheap.</span></div>
-        <div class="lesson-item"><strong>5. Sub-agents are for long work.</strong><span>The parent should stay responsive. The child should do the 30-minute task and report back when it's done.</span></div>
-        <div class="lesson-item"><strong>6. Cost routing is a feature.</strong><span>Flash for checks, Sonnet for chat, Opus for oracles, Codex for code. Don't pay premium rates for low-value work.</span></div>
-      </div>
-      <div class="visual-panel">
-        <div class="visual-header">
-          <div class="visual-title">Cognitive framework</div>
-          <code>the part that compounds</code>
-        </div>
-        <div class="visual-body">
-          <div class="grid-2">
-            <div class="callout info"><span class="callout-icon">1️⃣</span><div><strong>Identify what already exists.</strong> Read files, inspect state, and avoid rebuilding from scratch when the answer is already in the workspace.</div></div>
-            <div class="callout info"><span class="callout-icon">2️⃣</span><div><strong>State the approach in one sentence.</strong> It keeps execution crisp and makes tradeoffs visible before work begins.</div></div>
-            <div class="callout info"><span class="callout-icon">3️⃣</span><div><strong>Decompose the work.</strong> Break multi-step tasks into explicit chunks, then execute in order instead of thrashing.</div></div>
-            <div class="callout info"><span class="callout-icon">4️⃣</span><div><strong>Verify before claiming done.</strong> Run the check, re-read the file, inspect the output, catch your own bug.</div></div>
+    <!-- WHY BEELINK HARDWARE -->
+    <section class="block" id="why-beelink">
+      <div class="section-eyebrow">The hardware</div>
+      <h2 class="section-title">Your laptop sleeps. Your agent shouldn't.</h2>
+      <p class="section-lede">A dedicated Beelink mini PC keeps the agent running 24/7. Silent, low-power, desk-sized. These are the two models I recommend.</p>
+      <div class="hw-grid">
+        <div class="hw-card">
+          <img src="assets/brand/gti15-01.webp" alt="Beelink GTi15">
+          <div class="info">
+            <h3>Beelink SER9 Pro</h3>
+            <div class="price">From $549</div>
+            <p>AI 9 HX 370 — the sweet spot for agent workloads + local model inference.</p>
+            <ul>
+              <li>AMD Ryzen AI 9 HX 370</li>
+              <li>32GB DDR5 / 1TB NVMe</li>
+              <li>Runs Qwen 3.5 9B at ~40 tok/s locally</li>
+              <li>15W idle, silent under load</li>
+              <li>OpenClaw pre-installed SSD available</li>
+            </ul>
           </div>
-          <div class="callout purple"><span class="callout-icon">🧪</span><div><strong>Critique loops matter.</strong> For public content, architecture, launches, and money decisions: draft → critique → revise once. That single extra loop is where the quality jump comes from.</div></div>
         </div>
-      </div>
-      <div class="key-principle">
-        <strong>Key Principle</strong>
-        <div><strong style="display:inline; color: var(--text); font-size: 16px; text-transform:none; letter-spacing:0;">Customizing isn't the skill. Output is.</strong> The agent handles the background work. You get 20-30% more done. More reps turns into better signal, and better signal turns into better outcomes.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-label" id="part-4"><span>Part 4 · Level Up</span><hr></div>
-
-  <div class="step" data-step="12">
-    <div class="step-header">
-      <div class="step-number">12</div>
-      <div>
-        <div class="step-title">Add Clawsuite as the visual command center</div>
-        <div class="step-time">10 min</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <p>OpenClaw is the runtime. Clawsuite is the cockpit. If you want dashboard views, file browsing, terminal access, chat, task boards, and agent management in one place, this is the layer that makes the stack feel like a product instead of a pile of terminals.</p>
-      <div class="code-block">
-        <div class="code-label">Clawsuite setup <button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><span class="cmd">git</span> clone https://github.com/outsourc-e/clawsuite
-<span class="cmd">cd</span> clawsuite
-<span class="cmd">pnpm</span> install
-<span class="cmd">pnpm</span> dev</pre>
-      </div>
-      <div class="callout tip"><span class="callout-icon">🖥️</span><div><strong>Runs locally on port 3000.</strong> You get dashboard views, file explorer, terminal, task board, chat, and agent management UI against the same gateway.</div></div>
-      <div class="visual-panel">
-        <div class="visual-header">
-          <div class="visual-title"><img src="assets/clawsuite-icon-512.png" alt="Clawsuite logo" class="logo-img"> Clawsuite control UI</div>
-          <code>localhost:3000</code>
-        </div>
-        <div class="visual-body">
-          <div class="screenshot-frame">
-            <img src="assets/clawsuite-dashboard-v3.png" alt="Clawsuite dashboard screenshot">
-          </div>
-          <div class="grid-2">
-            <div class="callout info"><span class="callout-icon">📊</span><div><strong>Why it matters:</strong> Clawsuite turns the runtime into something you can actually steer, inspect, and demo to people without juggling terminal tabs.</div></div>
-            <div class="callout purple"><span class="callout-icon">✨</span><div><strong>Brand role:</strong> OpenClaw is the engine, Clawsuite is the visual layer, and Beelink is the hardware home.</div></div>
+        <div class="hw-card">
+          <img src="assets/brand/gti15-02.webp" alt="Beelink SER10 MAX">
+          <div class="info">
+            <h3>Beelink SER10 MAX</h3>
+            <div class="price">From $899</div>
+            <p>AI 9 HX 470 — when you need bigger local models or multiple agents in parallel.</p>
+            <ul>
+              <li>AMD Ryzen AI 9 HX 470</li>
+              <li>64GB DDR5 / 2TB NVMe</li>
+              <li>Runs 14B+ parameter models comfortably</li>
+              <li>Dual display, WiFi 7, BT 5.4</li>
+              <li>OpenClaw pre-installed SSD available</li>
+            </ul>
           </div>
         </div>
       </div>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>Clawsuite is running and connected to the gateway</label>
+    </section>
+
+    <!-- FOOTER -->
+  </main>
+
+  <footer>
+    <div class="logos">
+      <img src="assets/brand/logo-400.png" alt="OpenClaw">
+      <span style="font-size: 20px; color: var(--text-dim);">&times;</span>
+      <img src="assets/brand/logo-800.webp" alt="Beelink">
     </div>
-  </div>
-
-  <div class="step" data-step="13">
-    <div class="step-header">
-      <div class="step-number">13</div>
-      <div>
-        <div class="step-title">Move it onto dedicated hardware, Beelink × OpenClaw</div>
-        <div class="step-time">15 min</div>
-      </div>
-    </div>
-    <div class="step-body">
-      <p>If you're running this every day, get it off your laptop. A small always-on box wins on uptime, power draw, thermals, and the simple fact that your agent doesn't disappear when you close the lid. That's the whole reason this fits the Beelink × OpenClaw hackathon so well.</p>
-      <div class="callout purple"><span class="callout-icon">⚙️</span><div><strong>Beelink SER-series is the clean recommendation.</strong> Enough CPU for the gateway, enough headroom for background jobs, and a much nicer place to park local models than your daily driver machine.</div></div>
-      <div class="grid-2">
-        <div class="file-block">
-          <div class="file-header">Recommended Beelink setup</div>
-          <div class="file-content">Hardware
-- Beelink SER-series mini PC
-- 32GB RAM if you want local models too
-- 1TB SSD for workspaces, repos, and model files
-
-What runs on it
-- OpenClaw gateway
-- Clawsuite
-- Ollama for qwen3:8b / qwen3.5:9b
-- Background jobs, heartbeats, cron, and long-lived sessions</div>
-        </div>
-        <div class="file-block">
-          <div class="file-header">Why it fits the hackathon</div>
-          <div class="file-content">The hackathon angle is not "here is an app on a box."
-It's that a dedicated mini PC changes the quality of the agent:
-- always on
-- cheaper to leave running
-- stable home for local inference
-- separate from the founder's daily machine
-- better for long-lived background work</div>
-        </div>
-      </div>
-      <div class="hardware-card">
-        <div class="mini-pc" aria-hidden="true"></div>
-        <div>
-          <div class="visual-title" style="margin-bottom: 10px;"><span class="brand-mark beelink"></span> Beelink hardware profile</div>
-          <p>A small dedicated box is what makes the rest of this stack believable. OpenClaw keeps the agent alive, Clawsuite makes it operable, and the Beelink mini PC gives the whole system a stable always-on home.</p>
-        </div>
-      </div>
-      <ul style="padding-left: 20px;">
-        <li>24/7 uptime without laptop sleep issues</li>
-        <li>Cheap power draw for always-on background work</li>
-        <li>Good home for Ollama and lightweight local models</li>
-        <li>Cleaner separation between your work machine and your agent machine</li>
-      </ul>
-      <p>This is not Beelink-or-bust. Any always-on Linux box or old Mac mini works. Beelink × OpenClaw is just the cleanest default recommendation for most people, which is exactly why I'm centering it in this build.</p>
-      <label class="check-label"><input type="checkbox" onchange="updateProgress()"><span class="checkmark"></span>The stack is running somewhere that stays on when my laptop closes</label>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="brand-lockup" style="margin-top: 0; margin-bottom: 18px;">
-    <div class="brand-chip"><span class="brand-mark openclaw">🦞</span> OpenClaw</div>
-    <div class="brand-chip"><span class="brand-mark clawsuite"></span> Clawsuite</div>
-    <div class="brand-chip"><span class="brand-mark beelink"></span> Beelink</div>
-  </div>
-  <div class="hero-card" style="max-width: 860px; margin: 0 auto 16px; text-align: left;">
-    <h3>Final pitch</h3>
-    <p>Beelink gives the stack a stable body. OpenClaw gives it a brain. Clawsuite gives it a face. Put together, it stops feeling like a toy demo and starts feeling like something a founder can actually run every day.</p>
-  </div>
-  <p>Built by Eric · Powered by OpenClaw</p>
-  <p><a href="https://github.com/openclaw/openclaw">GitHub</a> · <a href="<!-- DISCORD_INVITE_URL -->">Discord</a> · <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> · <a href="https://www.bee-link.com/">Beelink</a></p>
-</footer>
-
+    <p style="margin-bottom: 8px;">
+      <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> &middot;
+      <a href="https://github.com/outsourc-e/hermes-workspace">Hermes-Workspace</a> &middot;
+      <a href="https://discord.gg/XwU3qDAe">Discord</a> &middot;
+      <a href="https://x.com/outsource_">@outsource_</a>
+    </p>
+    <p>Built by <a href="https://x.com/outsource_">Eric S.</a> and <strong style="color: var(--beelink-yellow);">Aurora</strong> &mdash; Beelink &times; OpenClaw Hackathon 2026</p>
+  </footer>
 <script>
-  const TOTAL_STEPS = 13;
-
-  function updateProgress() {
-    const checks = document.querySelectorAll('.check-label input[type="checkbox"]');
-    let done = 0;
-    checks.forEach((c) => {
-      if (c.checked) {
-        done++;
-        c.closest('.step')?.classList.add('completed');
-      } else {
-        c.closest('.step')?.classList.remove('completed');
-      }
-    });
-    const pct = Math.round((done / TOTAL_STEPS) * 100);
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-label').textContent = done + ' / ' + TOTAL_STEPS;
-    const state = Array.from(checks).map(c => c.checked);
-    localStorage.setItem('ocplatform-field-report-progress', JSON.stringify(state));
-  }
-
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    const text = pre.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy';
-        btn.classList.remove('copied');
-      }, 1800);
-    });
-  }
-
-  function setOS(os) {
-    document.documentElement.setAttribute('data-os', os);
-    document.getElementById('os-mac').classList.toggle('active', os === 'mac');
-    document.getElementById('os-win').classList.toggle('active', os === 'win');
-    document.getElementById('os-linux').classList.toggle('active', os === 'linux');
-    localStorage.setItem('ocplatform-field-report-os', os);
-  }
-
-  (function initOS() {
-    const saved = localStorage.getItem('ocplatform-field-report-os');
-    if (saved && ['mac', 'win', 'linux'].includes(saved)) {
-      setOS(saved);
-      return;
-    }
-    const ua = navigator.userAgent.toLowerCase();
-    const platform = (navigator.platform || '').toLowerCase();
-    if (platform.includes('mac') || ua.includes('mac')) return setOS('mac');
-    if (platform.includes('win') || ua.includes('win')) return setOS('win');
-    return setOS('linux');
-  })();
-
-  (function initProgress() {
-    try {
-      const saved = JSON.parse(localStorage.getItem('ocplatform-field-report-progress') || '[]');
-      const checks = document.querySelectorAll('.check-label input[type="checkbox"]');
-      saved.forEach((value, index) => {
-        if (checks[index]) checks[index].checked = value;
-      });
-    } catch {}
-    updateProgress();
-  })();
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const code = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code);
+    btn.textContent = 'Copied';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+});
+function setOs(os) {
+  document.querySelectorAll('.os-tab').forEach(t => t.classList.toggle('active', t.dataset.os === os));
+  document.querySelectorAll('pre[data-os]').forEach(pre => {
+    pre.hidden = pre.dataset.os !== os;
+  });
+}
+document.querySelectorAll('.os-tab').forEach(tab => {
+  tab.addEventListener('click', () => setOs(tab.dataset.os));
+});
 </script>
-
 </body>
 </html>
