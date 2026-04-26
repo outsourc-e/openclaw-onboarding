@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beelink × OpenClaw — The Always-On Agent Setup</title>
-  <meta name="description" content="The OpenClaw install guide for Beelink mini PCs. Video walkthrough, step-by-step commands, and practical setup optimizations.">
-  <meta property="og:title" content="Beelink × OpenClaw — The Always-On Agent Setup">
-  <meta property="og:description" content="Video install, copy-paste commands, and the optimizations that make it production-grade.">
+  <title>Beelink × OpenClaw — The 5-Minute Agent Install Guide</title>
+  <meta name="description" content="The OpenClaw install guide for Beelink mini PCs. Step-by-step commands, the framework, and the routing patterns that make it actually work.">
+  <meta property="og:title" content="Beelink × OpenClaw — The 5-Minute Agent Install Guide">
+  <meta property="og:description" content="Copy-paste install + the framework that makes the agent stick. Submission for the Beelink+OpenClaw Installation &amp; Use Cases Sharing Event.">
   <meta property="og:image" content="assets/brand/beelink-ocplatform-series.jpg">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Beelink × OpenClaw — The Always-On Agent Setup">
+  <meta name="twitter:title" content="Beelink × OpenClaw — The 5-Minute Agent Install Guide">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,7 +99,7 @@
     nav.topnav .wrap {
       max-width: var(--maxw);
       margin: 0 auto;
-      padding: 14px 24px;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -107,13 +107,20 @@
     .brand-lockup {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: -0.01em;
+      gap: 16px;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.02em;
     }
-    .brand-lockup img { height: 28px; width: auto; }
-    .brand-lockup .x { color: var(--text-dim); font-weight: 400; margin: 0 2px; }
+    .brand-lockup img.brand-logo { height: 72px; width: auto; }
+    .brand-lockup img.brand-beelink { height: 52px; width: auto; opacity: 0.95; }
+    .brand-lockup .x { color: var(--text-dim); font-weight: 400; margin: 0 8px; font-size: 32px; }
+    @media (max-width: 720px) {
+      .brand-lockup { font-size: 16px; gap: 10px; }
+      .brand-lockup img.brand-logo { height: 48px; }
+      .brand-lockup img.brand-beelink { height: 34px; }
+      .brand-lockup .x { font-size: 24px; margin: 0 6px; }
+    }
 
     nav.topnav .cta-row { display: flex; gap: 8px; align-items: center; }
     .nav-link {
@@ -162,24 +169,16 @@
       justify-content: center;
       overflow: hidden;
     }
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url('assets/brand/beelink-ocplatform-series.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.85;
-      z-index: 0;
-    }
+    /* hero-bg::before image removed — same image now lives in featured block below */
     .hero-bg::after {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 100% 70% at 50% 40%, rgba(5, 7, 12, 0.15) 0%, rgba(5, 7, 12, 0.55) 55%, rgba(5, 7, 12, 0.85) 85%, var(--bg) 100%),
-        linear-gradient(180deg, transparent 0%, transparent 60%, var(--bg) 100%);
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(254, 191, 9, 0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 50% 80%, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
       z-index: 1;
+      pointer-events: none;
     }
     .hero {
       position: relative;
@@ -476,8 +475,10 @@
     /* HW section */
     .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 900px) { .hw-grid { grid-template-columns: 1fr; } }
-    .hw-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.2s; }
-    .hw-card:hover { border-color: var(--beelink-yellow); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .hw-card { display: block; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.2s; color: inherit; text-decoration: none; }
+    .hw-card:hover { border-color: var(--beelink-yellow); transform: translateY(-2px); box-shadow: var(--shadow-md); color: inherit; }
+    .hw-card .cta-arrow { color: var(--beelink-yellow) !important; font-weight: 600; padding-top: 8px; padding-left: 0 !important; }
+    .hw-card .cta-arrow::before { display: none; }
     .hw-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--beelink-navy); }
     .hw-card .info { padding: 24px; }
     .hw-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
@@ -502,12 +503,15 @@
       nav.topnav .wrap {
         flex-wrap: wrap;
         gap: 12px;
-        justify-content: center;
+        justify-content: space-between;
       }
       nav.topnav .cta-row {
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-end;
+        gap: 4px;
       }
+      .nav-link { display: none; }
+      .nav-link[href="#install"], .nav-link[href="#why-beelink"] { display: inline-flex; }
       .step {
         grid-template-columns: 1fr;
         gap: 16px;
@@ -516,6 +520,16 @@
         width: 40px;
         height: 40px;
       }
+    }
+    @media (max-width: 540px) {
+      .nav-link { display: none !important; }
+      nav.topnav .wrap { padding: 12px 16px; }
+      .hero h1 { font-size: 38px !important; line-height: 1.05 !important; }
+      .hero .ctas { flex-direction: column; width: 100%; gap: 10px; }
+      .hero .ctas .btn { width: 100%; justify-content: center; }
+      .section-title { font-size: 26px !important; }
+      .hw-card .price { font-size: 24px; }
+      pre code { font-size: 12px !important; }
     }
     .video-shell-featured {
       position: relative;
@@ -547,18 +561,17 @@
   <nav class="topnav">
     <div class="wrap">
       <div class="brand-lockup">
-        <img src="assets/brand/logo-400.png" alt="OpenClaw">
+        <img class="brand-logo" src="assets/brand/logo-400.png" alt="OpenClaw">
         <span class="x">×</span>
-        <span style="color: var(--beelink-yellow);">Beelink</span>
+        <img class="brand-beelink" src="assets/brand/logo-800.webp" alt="Beelink">
       </div>
       <div class="cta-row">
-        <a class="nav-link" href="#video">Video</a>
         <a class="nav-link" href="#install">Install</a>
         <a class="nav-link" href="#framework">Framework</a>
         <a class="nav-link" href="#oracle">Oracle</a>
         <a class="nav-link" href="#optimizations">Routing</a>
         <a class="nav-link" href="#why-beelink">Hardware</a>
-        <a class="btn btn-primary" href="#video">Watch install →</a>
+        <a class="btn btn-primary" href="#install">Get started →</a>
       </div>
     </div>
   </nav>
@@ -567,32 +580,52 @@
     <!-- HERO -->
     <div class="hero-bg">
       <section class="hero">
+        <div class="hero-eyebrow"><span class="dot"></span>Beelink+OpenClaw Installation Guide Award · Submission</div>
         <h1>
           Steal my AI agent setup.
           <br><span class="grad">Beelink × OpenClaw.</span>
         </h1>
         <p class="lede">
-          The exact stack I use to run a 24/7 AI agent on a Beelink mini PC. Install in 5 minutes, then copy the routing, memory, and multi-model patterns that make it actually work day to day.
+          The exact stack for running a 24/7 AI agent on a Beelink mini PC. Five-minute install, then the routing, memory, and multi-model patterns that make it actually work day to day.
         </p>
         <div class="ctas">
-          <a class="btn btn-primary" href="#video">▶ Watch the 5-min install</a>
-          <a class="btn btn-ghost" href="#install">Jump to commands</a>
+          <a class="btn btn-primary" href="#install">Jump to the install →</a>
+          <a class="btn btn-ghost" href="#why-beelink">See the hardware</a>
         </div>
       </section>
     </div>
 
-    <!-- FEATURED VIDEO (right after hero) -->
-    <section class="block video-featured" id="video">
+    <!-- FEATURED HARDWARE IMAGE (right after hero) -->
+    <section class="block video-featured" id="hardware-hero">
       <div class="video-shell-featured">
-        <div class="video-placeholder">
-          <span class="tag">Recording soon</span>
-          <div class="play">▶</div>
-          <h3>The 5-minute install</h3>
-          <p style="color: var(--text-dim); font-size: 14px; max-width: 420px; text-align: center;">Beelink unbox → OpenClaw install → first agent response in Clawsuite. Real-time, no edits.</p>
-        </div>
+        <img src="assets/brand/beelink-ocplatform-series.jpg" alt="Beelink × OpenClaw — the SER9 Pro 370 and SER10 MAX 470 mini PCs that run the agent 24/7" style="width:100%; height:100%; object-fit:cover; display:block;">
       </div>
     </section>
 
+
+    <!-- WHY A BEELINK + AGENT -->
+    <section class="block" id="why">
+      <div class="section-eyebrow">Why a 24/7 agent on a Beelink?</div>
+      <h2 class="section-title">A laptop sleeps. Your agent shouldn't.</h2>
+      <p class="section-lede">Three reasons this setup beats running an agent on your daily-driver machine.</p>
+      <div class="stack-grid" style="margin-top:32px;">
+        <div class="stack-card">
+          <div class="icon">🌙</div>
+          <h3>Always on</h3>
+          <p>The agent reads your inbox, watches calendars, and runs hb_signals while you sleep, work, or travel. No "wake the laptop" gap.</p>
+        </div>
+        <div class="stack-card">
+          <div class="icon">🔒</div>
+          <h3>Private by default</h3>
+          <p>Local models via Ollama keep sensitive context on the box. Routing rules push only what needs cloud thinking out to OpenRouter or Anthropic.</p>
+        </div>
+        <div class="stack-card">
+          <div class="icon">💸</div>
+          <h3>Cheap to run</h3>
+          <p>Beelink mini PCs idle at ~15 W. Combined with smart routing, a useful 24/7 agent stack costs less per month than one team Slack seat.</p>
+        </div>
+      </div>
+    </section>
 
     <!-- INSTALL STEPS -->
     <section class="block" id="install">
@@ -656,12 +689,29 @@ openclaw --version</code></pre>
       </div></div>
 
       <div class="step"><div class="step-num">4</div><div>
-        <h3>Optional: connect Claude Code</h3>
-        <p>If you use Claude Pro or Max, this is a strong add-on for coding and deep reasoning inside OpenClaw.</p>
-<pre><button class="copy-btn">Copy</button><code>npm install -g @anthropic-ai/claude-code
-claude setup-token
+        <h3>Connect a model provider</h3>
+        <p>OpenClaw routes to any provider. Free models work great via OpenRouter; OpenAI, Anthropic, and Google paid keys or OAuth flows are also supported. Pick one path below.</p>
+<pre><button class="copy-btn">Copy</button><code># Free path — OpenRouter (no card required for free models)
+# 1. Sign up:  https://openrouter.ai
+# 2. Generate an API key
+# 3. Paste it during `OpenClaw onboard` when prompted
 
-# Use the token during OpenClaw onboarding/config when prompted</code></pre>
+# Examples of free OpenRouter models:
+#   openrouter/google/gemini-2.5-flash-lite:free
+#   openrouter/meta-llama/llama-4-scout:free
+#   openrouter/qwen/qwen3-32b:free
+
+# OpenAI / ChatGPT Plus path:
+#   npm install -g @openai/codex
+#   codex login                 # OAuth via your ChatGPT account
+
+# Anthropic / Claude path:
+#   Get an API key at https://console.anthropic.com
+#   Paste it during onboarding
+
+# Google / Gemini path:
+#   Get an API key at https://aistudio.google.com
+#   Paste it during onboarding</code></pre>
       </div></div>
 
       <div class="step"><div class="step-num">5</div><div>
@@ -717,11 +767,11 @@ brew install --cask clawsuite
         <h3>Who you are.</h3>
         <p>What you build, how you work, your stack, your preferences. Stops the agent from explaining things you already know and lets it pattern-match to your taste.</p>
 <pre><button class="copy-btn">Copy</button><code># USER.md
-Name: Eric
-Timezone: EST
-Stack: Node / pnpm / Python / Supabase / Stripe
-Vibe: Direct, concise, actionable — no hand-holding.
-Skip: over-explaining obvious things, fluff, safety lectures.</code></pre>
+Name: &lt;your name&gt;
+Timezone: &lt;your tz, e.g. EST&gt;
+Stack: &lt;your tools — e.g. Node / Python / Postgres / Stripe&gt;
+Vibe: &lt;how you want to be talked to — e.g. direct, concise&gt;
+Skip: &lt;what to never do — fluff, sycophancy, safety lectures&gt;</code></pre>
       </div>
 
       <div class="opt-card">
@@ -758,29 +808,26 @@ BANNED
         <h3>Today's tempo.</h3>
         <p>Are we shipping? Strategizing? Recovering? This file tone-matches the agent to the day without you having to say it every turn.</p>
 <pre><button class="copy-btn">Copy</button><code># WORK_MODE.md
-Mode: Build (shipping Beelink article tonight, deadline Friday).
-Tone: Terse, executable, high-output.
+Mode: &lt;Build / Strategy / Recovery&gt;
+Focus: &lt;what's shipping this week, key deadline&gt;
+Tone: &lt;e.g. Terse, executable, high-output&gt;
 Skip: long-form explanations, optional commentary.
-Escalate: any blocker that costs >30 minutes to resolve alone.</code></pre>
+Escalate: any blocker costing &gt;30 minutes to resolve alone.</code></pre>
       </div>
 
       <div class="opt-card">
         <span class="tag tag-free">Daily memory</span>
         <h3>memory/YYYY-MM-DD.md</h3>
         <p>Raw logs of what happened each day. Decisions, context, things to remember. Written as you go. The primary continuity source — reloaded at the start of every session.</p>
-<pre><button class="copy-btn">Copy</button><code># memory/2026-04-23.md
+<pre><button class="copy-btn">Copy</button><code># memory/YYYY-MM-DD.md
 ## Shipped
-- PR #133 security hardening merged (closes #121-#125)
-- PC1 qwen3.6:27b pulled, Flash Attention enabled
-- Bench-loop baseline: 25 tok/s → 43 tok/s with flash attn
+- &lt;What landed today — PRs, commits, decisions&gt;
 
 ## Open
-- PR #132 needs server-side gating before merge
-- Beelink article: Part 3 draft tonight
+- &lt;Threads still running — what's blocked, what's next&gt;
 
 ## Lesson
-- SSH Start-Process on Windows detaches badly.
-  Use scheduled tasks or tray app for persistence.</code></pre>
+- &lt;Anything you don't want to relearn — fixes, gotchas&gt;</code></pre>
       </div>
 
       <div class="opt-card">
@@ -789,14 +836,11 @@ Escalate: any blocker that costs >30 minutes to resolve alone.</code></pre>
         <p>Curated long-term memory. Main session only — never loaded in group chats, Discord, or shared contexts. Distilled wisdom, not raw logs. Updated during heartbeat polls.</p>
 <pre><button class="copy-btn">Copy</button><code># MEMORY.md — curated
 ## Current Projects
-- Clawsuite v2, Hermes-Workspace, BenchLoop, OCPlatform
-- Discord community launched April 14
-- Creator-economy ops
+- &lt;Project A — what it is, status&gt;
+- &lt;Project B — what it is, status&gt;
 
 ## Principles
-- Speed, clarity, leverage
-- Execution over theory
-- Numbers over vibes
+- &lt;Your operating principles — speed, clarity, etc&gt;
 
 ## Sensitive
 - API keys + personal context stay out of shared sessions</code></pre>
@@ -857,7 +901,7 @@ not a question.</code></pre>
       <div class="opt-card">
         <span class="tag tag-smart">Heartbeats</span>
         <h3>Batch periodic checks into one call.</h3>
-        <p>Heartbeats run every ~30 min: check email, calendar, mentions, weather. One cheap-model call replaces six cron jobs. Memory curation happens here too.</p>
+        <p>Heartbeats run a few times a day: check email, calendar, mentions, weather. One cheap-model call replaces six cron jobs. Memory curation happens here too.</p>
 <pre><button class="copy-btn">Copy</button><code># HB_SIGNAL.md — what to check each heartbeat
 1. Emails — anything urgent?
 2. Calendar — next 2h?
@@ -876,7 +920,7 @@ not a question.</code></pre>
     <section class="block" id="optimizations">
       <div class="section-eyebrow">Steal my setup</div>
       <h2 class="section-title">The optimizations that make the setup cheaper and more resilient.</h2>
-      <p class="section-lede">These are the exact patterns I run. Copy them, tweak what you want, skip what you don't need.</p>
+      <p class="section-lede">Copy these, tweak what you want, skip what you don't need.</p>
 
       <div class="opt-card">
         <span class="tag tag-free">Free</span>
@@ -954,38 +998,40 @@ local_models:
     <section class="block" id="why-beelink">
       <div class="section-eyebrow">The hardware</div>
       <h2 class="section-title">Your laptop sleeps. Your agent shouldn't.</h2>
-      <p class="section-lede">A dedicated Beelink mini PC keeps the agent running 24/7. Silent, low-power, desk-sized. These are the two models I recommend.</p>
+      <p class="section-lede">A dedicated Beelink mini PC keeps the agent running 24/7. Silent, low-power, desk-sized. These are the two models that fit this setup best.</p>
       <div class="hw-grid">
-        <div class="hw-card">
-          <img src="assets/brand/gti15-01.webp" alt="Beelink GTi15">
+        <a class="hw-card" href="https://www.bee-link.com/products/beelink-ser9-pro-amd-pro-ryzen-ai-9-hx-370-ocplatform" target="_blank" rel="noopener">
+          <img src="assets/brand/gti15-01.webp" alt="Beelink SER9 Pro">
           <div class="info">
             <h3>Beelink SER9 Pro</h3>
-            <div class="price">From $549</div>
-            <p>AI 9 HX 370 — the sweet spot for agent workloads + local model inference.</p>
+            <div class="price">From $1,149</div>
+            <p>AI 9 HX 370 — the sweet spot for agent workloads + small local-model inference.</p>
             <ul>
-              <li>AMD Ryzen AI 9 HX 370</li>
+              <li>AMD Ryzen AI 9 HX 370 (12 Zen 5 cores)</li>
+              <li>Radeon 890M iGPU + XDNA 2 NPU (80 AI TOPS)</li>
               <li>32GB DDR5 / 1TB NVMe</li>
-              <li>Runs Qwen 3.5 9B at ~40 tok/s locally</li>
-              <li>15W idle, silent under load</li>
-              <li>OpenClaw pre-installed SSD available</li>
+              <li>Runs 7-9B local models comfortably</li>
+              <li>OpenClaw pre-installed SSD model: $1,249</li>
+              <li class="cta-arrow">Buy on bee-link.com →</li>
             </ul>
           </div>
-        </div>
-        <div class="hw-card">
+        </a>
+        <a class="hw-card" href="https://www.bee-link.com/products/beelink-ser10-max-amd-pro-ryzen-ai-9-hx-470-ocplatform" target="_blank" rel="noopener">
           <img src="assets/brand/gti15-02.webp" alt="Beelink SER10 MAX">
           <div class="info">
             <h3>Beelink SER10 MAX</h3>
-            <div class="price">From $899</div>
+            <div class="price">From $1,299</div>
             <p>AI 9 HX 470 — when you need bigger local models or multiple agents in parallel.</p>
             <ul>
               <li>AMD Ryzen AI 9 HX 470</li>
               <li>64GB DDR5 / 2TB NVMe</li>
-              <li>Runs 14B+ parameter models comfortably</li>
+              <li>Runs 14B+ models smoothly, 27B in Q4</li>
               <li>Dual display, WiFi 7, BT 5.4</li>
-              <li>OpenClaw pre-installed SSD available</li>
+              <li>OpenClaw pre-installed SSD model: $1,399</li>
+              <li class="cta-arrow">Buy on bee-link.com →</li>
             </ul>
           </div>
-        </div>
+        </a>
       </div>
     </section>
 
@@ -994,14 +1040,14 @@ local_models:
       <div class="section-eyebrow">Battle-tested</div>
       <h2 class="section-title">The agent that wrote this setup.</h2>
       <p class="section-lede">
-        These numbers are from 65 days of real operation — not a mockup. Same agent. Same harness. Same install process you're about to run.
+        These numbers are from 62 days of real operation — not a mockup. Same agent. Same harness. Same install process you're about to run.
       </p>
       <div class="stats-strip">
-        <div class="stat-item"><div class="num">65</div><div class="label">Days operated</div></div>
+        <div class="stat-item"><div class="num">62</div><div class="label">Days operated</div></div>
         <div class="stat-item"><div class="num">1,215</div><div class="label">Sessions</div></div>
         <div class="stat-item"><div class="num">33,294</div><div class="label">Tool calls</div></div>
         <div class="stat-item"><div class="num">142M</div><div class="label">Billable tokens</div></div>
-        <div class="stat-item"><div class="num">3,469</div><div class="label">Commits shipped</div></div>
+        <div class="stat-item"><div class="num">2,977</div><div class="label">Commits shipped</div></div>
       </div>
     </section>
     <!-- STACK OVERVIEW -->
@@ -1030,8 +1076,8 @@ local_models:
           <ul>
             <li>Electron app, macOS + Windows + Linux</li>
             <li>Visual inspector for agent runs</li>
-            <li>322★ on GitHub, 30k+ clones</li>
-            <li>Open source, MIT</li>
+            <li>Open-source MIT (github.com/outsourc-e/clawsuite)</li>
+            <li>One-click connect to any OpenClaw gateway</li>
           </ul>
         </div>
         <div class="stack-card">
@@ -1059,11 +1105,13 @@ local_models:
     </div>
     <p style="margin-bottom: 8px;">
       <a href="https://github.com/outsourc-e/clawsuite">Clawsuite</a> &middot;
-      <a href="https://github.com/outsourc-e/hermes-workspace">Hermes-Workspace</a> &middot;
-      <a href="https://discord.gg/XwU3qDAe">Discord</a> &middot;
       <a href="https://x.com/outsource_">@outsource_</a>
     </p>
-    <p>Built by <a href="https://x.com/outsource_">Eric S.</a> and <strong style="color: var(--beelink-yellow);">Aurora</strong> &mdash; Beelink &times; OpenClaw Hackathon 2026</p>
+    <p style="margin-bottom: 16px;">Built by <a href="https://x.com/outsource_">Eric S.</a> and <strong style="color: var(--beelink-yellow);">Aurora</strong> &mdash; Beelink &times; OpenClaw 2026</p>
+    <p style="font-size: 12px; color: var(--text-dim); max-width: 640px; margin: 0 auto; line-height:1.6;">
+      Submitted to the <a href="https://www.bee-link.com/blogs/all/1">Beelink+OpenClaw Installation &amp; Use Cases Sharing Event</a> &mdash;
+      First Prize: Installation Guide Award. Follow <a href="https://x.com/Beelinkofficial">@Beelinkofficial</a> and join the Beelink X community.
+    </p>
   </footer>
 <script>
 document.querySelectorAll('.copy-btn').forEach(btn => {
